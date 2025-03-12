@@ -122,6 +122,11 @@ const CompanySection = ({ company, projects, reportDate }: CompanySectionProps) 
           </button>
         </div>
         
+        {/* Report date banner */}
+        <div className="bg-secondary p-3 rounded-md mb-4 text-center font-medium border-b border-border">
+          Fecha del informe: {reportDate}
+        </div>
+        
         {projects.length > 0 ? (
           <ProjectTable 
             companyId={companyId}
