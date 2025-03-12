@@ -1,6 +1,8 @@
 
-import { useState } from 'react';
-import { sortTable } from '../utils/emailUtils';
+import { useState, useMemo } from 'react';
+import { Input } from './ui/input';
+import { Button } from './ui/button';
+import { ChevronUp, ChevronDown, X } from 'lucide-react';
 
 interface ProjectData {
   empresa: string;
@@ -19,113 +21,144 @@ interface ProjectTableProps {
 }
 
 const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
-  const [activeSort, setActiveSort] = useState<{ column: number; direction: 'asc' | 'desc' } | null>(null);
+  const [sortConfig, setSortConfig] = useState<{
+    key: keyof ProjectData | null;
+    direction: 'asc' | 'desc';
+  }>({
+    key: null,
+    direction: 'asc'
+  });
 
-  const handleSort = (columnIndex: number) => {
-    sortTable(columnIndex, tableId);
-    
-    // Track active sort state for UI
-    setActiveSort(prev => {
-      if (prev?.column === columnIndex) {
-        // Toggle direction if same column
-        return { column: columnIndex, direction: prev.direction === 'asc' ? 'desc' : 'asc' };
-      }
-      return { column: columnIndex, direction: 'asc' };
+  const [filters, setFilters] = useState<Partial<Record<keyof ProjectData, string>>>({});
+
+  const handleSort = (key: keyof ProjectData) => {
+    setSortConfig(current => ({
+      key,
+      direction: current.key === key && current.direction === 'asc' ? 'desc' : 'asc'
+    }));
+  };
+
+  const handleFilter = (key: keyof ProjectData, value: string) => {
+    setFilters(current => ({
+      ...current,
+      [key]: value
+    }));
+  };
+
+  const clearFilter = (key: keyof ProjectData) => {
+    setFilters(current => {
+      const newFilters = { ...current };
+      delete newFilters[key];
+      return newFilters;
     });
   };
 
+  const filteredAndSortedData = useMemo(() => {
+    let processedData = [...data];
+
+    // Apply filters
+    Object.keys(filters).forEach(key => {
+      const filterValue = filters[key as keyof ProjectData];
+      if (filterValue) {
+        processedData = processedData.filter(item =>
+          String(item[key as keyof ProjectData])
+            .toLowerCase()
+            .includes(filterValue.toLowerCase())
+        );
+      }
+    });
+
+    // Apply sorting
+    if (sortConfig.key) {
+      processedData.sort((a, b) => {
+        const aValue = String(a[sortConfig.key!]).toLowerCase();
+        const bValue = String(b[sortConfig.key!]).toLowerCase();
+        
+        if (sortConfig.direction === 'asc') {
+          return aValue > bValue ? 1 : -1;
+        } else {
+          return aValue < bValue ? 1 : -1;
+        }
+      });
+    }
+
+    return processedData;
+  }, [data, filters, sortConfig]);
+
+  const columnHeaders: { key: keyof ProjectData; label: string }[] = [
+    { key: 'empresa', label: 'Empresa' },
+    { key: 'nombreProyecto', label: 'Nombre Proyecto' },
+    { key: 'fechaEntrega', label: 'Fecha Entrega' },
+    { key: 'id', label: 'ID' },
+    { key: 'estado', label: 'Estado' },
+    { key: 'especialidad', label: 'Especialidad' },
+    { key: 'proyectoEstudio', label: 'Proyecto/Estudio' }
+  ];
+
   return (
-    <div className="table-wrapper animate-scale-in">
-      <table id={tableId} className="data-table">
+    <div className="table-wrapper animate-scale-in overflow-x-auto">
+      <table id={tableId} className="w-full border-collapse">
         <thead>
           <tr>
-            <th 
-              onClick={() => handleSort(0)}
-              className={activeSort?.column === 0 ? activeSort.direction : ''}
-            >
-              Empresa
-              <span className="ml-1">{
-                activeSort?.column === 0 
-                  ? activeSort.direction === 'asc' ? '↑' : '↓' 
-                  : '⇕'
-              }</span>
-            </th>
-            <th 
-              onClick={() => handleSort(1)}
-              className={activeSort?.column === 1 ? activeSort.direction : ''}
-            >
-              Nombre Proyecto
-              <span className="ml-1">{
-                activeSort?.column === 1 
-                  ? activeSort.direction === 'asc' ? '↑' : '↓' 
-                  : '⇕'
-              }</span>
-            </th>
-            <th 
-              onClick={() => handleSort(2)}
-              className={activeSort?.column === 2 ? activeSort.direction : ''}
-            >
-              Fecha Entrega
-              <span className="ml-1">{
-                activeSort?.column === 2 
-                  ? activeSort.direction === 'asc' ? '↑' : '↓' 
-                  : '⇕'
-              }</span>
-            </th>
-            <th 
-              onClick={() => handleSort(3)}
-              className={activeSort?.column === 3 ? activeSort.direction : ''}
-            >
-              ID
-              <span className="ml-1">{
-                activeSort?.column === 3 
-                  ? activeSort.direction === 'asc' ? '↑' : '↓' 
-                  : '⇕'
-              }</span>
-            </th>
-            <th 
-              onClick={() => handleSort(4)}
-              className={activeSort?.column === 4 ? activeSort.direction : ''}
-            >
-              Estado
-              <span className="ml-1">{
-                activeSort?.column === 4 
-                  ? activeSort.direction === 'asc' ? '↑' : '↓' 
-                  : '⇕'
-              }</span>
-            </th>
-            <th 
-              onClick={() => handleSort(5)}
-              className={activeSort?.column === 5 ? activeSort.direction : ''}
-            >
-              Especialidad
-              <span className="ml-1">{
-                activeSort?.column === 5 
-                  ? activeSort.direction === 'asc' ? '↑' : '↓' 
-                  : '⇕'
-              }</span>
-            </th>
-            <th 
-              onClick={() => handleSort(6)}
-              className={activeSort?.column === 6 ? activeSort.direction : ''}
-            >
-              Proyecto/Estudio
-              <span className="ml-1">{
-                activeSort?.column === 6 
-                  ? activeSort.direction === 'asc' ? '↑' : '↓' 
-                  : '⇕'
-              }</span>
-            </th>
+            {columnHeaders.map(({ key, label }) => (
+              <th key={key} className="p-2 border bg-secondary">
+                <div className="space-y-2">
+                  <div 
+                    onClick={() => handleSort(key)}
+                    className="flex items-center justify-between cursor-pointer hover:opacity-80"
+                  >
+                    {label}
+                    <div className="flex flex-col">
+                      <ChevronUp 
+                        className={`h-3 w-3 ${
+                          sortConfig.key === key && sortConfig.direction === 'asc' 
+                            ? 'text-primary' 
+                            : 'text-muted-foreground'
+                        }`}
+                      />
+                      <ChevronDown 
+                        className={`h-3 w-3 ${
+                          sortConfig.key === key && sortConfig.direction === 'desc' 
+                            ? 'text-primary' 
+                            : 'text-muted-foreground'
+                        }`}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex gap-1">
+                    <Input
+                      placeholder={`Filtrar ${label}`}
+                      value={filters[key] || ''}
+                      onChange={(e) => handleFilter(key, e.target.value)}
+                      className="h-8 text-xs"
+                    />
+                    {filters[key] && (
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8"
+                        onClick={() => clearFilter(key)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              </th>
+            ))}
           </tr>
         </thead>
         <tbody>
-          {data.map((row, index) => (
-            <tr key={`${companyId}-${row.id}-${index}`}>
-              <td>{row.empresa}</td>
-              <td>{row.nombreProyecto}</td>
-              <td>{row.fechaEntrega}</td>
-              <td>{row.id}</td>
-              <td>
+          {filteredAndSortedData.map((row, index) => (
+            <tr 
+              key={`${companyId}-${row.id}-${index}`}
+              className="border-b hover:bg-muted/50"
+            >
+              <td className="p-2 border">{row.empresa}</td>
+              <td className="p-2 border">{row.nombreProyecto}</td>
+              <td className="p-2 border">{row.fechaEntrega}</td>
+              <td className="p-2 border">{row.id}</td>
+              <td className="p-2 border">
                 <span 
                   className={`inline-block px-2 py-0.5 rounded-full text-xs font-medium ${
                     row.estado === 'OK' ? 'bg-green-100 text-green-800' :
@@ -137,8 +170,8 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
                   {row.estado}
                 </span>
               </td>
-              <td>{row.especialidad}</td>
-              <td>{row.proyectoEstudio}</td>
+              <td className="p-2 border">{row.especialidad}</td>
+              <td className="p-2 border">{row.proyectoEstudio}</td>
             </tr>
           ))}
         </tbody>
