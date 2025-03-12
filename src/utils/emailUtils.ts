@@ -1,13 +1,22 @@
 
-export const sendEmail = (company: string, tableId: string) => {
+import html2canvas from 'html2canvas';
+
+export const sendEmail = async (company: string, tableId: string) => {
   try {
     const table = document.querySelector(`#${tableId}`);
     if (!table) {
       console.error('Table not found:', tableId);
-      return;
+      return false;
     }
     
+    // Capture table as image
+    const canvas = await html2canvas(table as HTMLElement);
+    const imageDataUrl = canvas.toDataURL('image/png');
+    
     let emailBody = `Resumen de Proyectos para ${company}:\n\n`;
+    
+    // Add image placeholder with attachment cid reference
+    emailBody += `[Esta es una imagen del resumen de proyectos. Si no la visualiza, active las imágenes en su cliente de correo]\n\n`;
     
     // Get headers
     const headers = Array.from(table.querySelectorAll('th'))
@@ -33,14 +42,52 @@ export const sendEmail = (company: string, tableId: string) => {
     });
     
     const subject = `Estatus de desarrollo Proyecto para ${company}`;
-    const mailtoLink = `mailto:jvega.CRC@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
     
-    // Create and click a temporary link
-    const tempLink = document.createElement('a');
-    tempLink.href = mailtoLink;
-    document.body.appendChild(tempLink);
-    tempLink.click();
-    document.body.removeChild(tempLink);
+    // For desktop email clients, we can use the mailto protocol
+    // But it doesn't support image attachments, so we'll notify users
+    const mailtoLink = `mailto:jvega.CRC@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody + "\n\n[La imagen de la tabla se ha omitido debido a limitaciones del protocolo mailto. Para incluir imágenes, utilice un cliente de correo electrónico.]")}`;
+    
+    // Open in a new tab to give the option to download the image
+    const imageWindow = window.open('');
+    if (imageWindow) {
+      imageWindow.document.write(`
+        <html>
+          <head>
+            <title>Tabla de Proyectos - ${company}</title>
+            <style>
+              body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
+              .instructions { max-width: 600px; margin: 0 auto 20px; line-height: 1.5; }
+              .buttons { margin: 20px 0; }
+              button { padding: 10px 15px; margin: 0 10px; cursor: pointer; background-color: #006699; color: white; border: none; border-radius: 4px; }
+              button:hover { background-color: #005588; }
+              img { max-width: 100%; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+            </style>
+          </head>
+          <body>
+            <div class="instructions">
+              <h2>Tabla de Proyectos - ${company}</h2>
+              <p>Se ha generado una imagen de la tabla de proyectos. Puede descargarla y adjuntarla manualmente a su correo electrónico.</p>
+            </div>
+            <img src="${imageDataUrl}" alt="Tabla de Proyectos ${company}" />
+            <div class="buttons">
+              <button onclick="window.location.href='${mailtoLink}'">Abrir Cliente de Correo</button>
+              <button onclick="downloadImage()">Descargar Imagen</button>
+            </div>
+            <script>
+              function downloadImage() {
+                const a = document.createElement('a');
+                a.href = "${imageDataUrl}";
+                a.download = "Tabla_Proyectos_${company.replace(/\s+/g, '_')}.png";
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+              }
+            </script>
+          </body>
+        </html>
+      `);
+      imageWindow.document.close();
+    }
     
     return true;
   } catch (error) {
