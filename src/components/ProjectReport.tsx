@@ -1,7 +1,10 @@
+
 import { useRef, useState, useEffect } from 'react';
 import Header from './Header';
 import CompanySection from './CompanySection';
 import { ProjectData } from '@/types/project';
+import { Button } from '@/components/ui/button';
+import { Grid2X2 } from 'lucide-react';
 
 // Group projects by company
 interface CompanyProjects {
@@ -71,46 +74,38 @@ const ProjectReport = ({ title, reportDate, projects }: ProjectReportProps) => {
         date={reportDate}
       />
       
-      <div className="max-w-7xl mx-auto px-8 mt-12">
-        <button
+      <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12">
+        <Button
           onClick={scrollToIndex}
           className="fixed right-8 bottom-8 z-10 p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:bg-primary/90 transition-all duration-300 group animate-float"
           aria-label="Scroll to Index"
+          size="icon"
         >
-          <svg 
-            xmlns="http://www.w3.org/2000/svg" 
-            className="transition-transform group-hover:-translate-y-1" 
-            width="24" 
-            height="24" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          >
-            <path d="m18 15-6-6-6 6"/>
-          </svg>
-        </button>
+          <Grid2X2 className="transition-transform group-hover:-translate-y-1" />
+        </Button>
         
         <div 
           id="companies-index" 
           ref={indexRef}
-          className="glass-panel rounded-xl p-8 mb-16 animate-scale-in"
+          className="glass-panel rounded-xl p-4 md:p-6 mb-10 animate-scale-in shadow-md"
         >
-          <h2 className="text-xl font-semibold mb-6">Índice de Empresas</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
+          <h2 className="text-lg md:text-xl font-semibold mb-4">Índice de Empresas</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {companies.map(company => {
               const companyId = `empresa_${company.replace(/\s+/g, '_')}`;
+              const isActive = activeCompany === company;
+              
               return (
                 <a
                   key={company}
                   href={`#${companyId}`}
-                  className={`px-4 py-2 rounded-lg transition-all duration-200 text-sm
-                    ${activeCompany === company 
-                      ? 'bg-primary text-primary-foreground'
-                      : 'hover:bg-secondary'
-                    }`}
+                  className={`
+                    px-3 py-2 rounded-lg transition-all duration-200 text-sm
+                    flex items-center justify-center text-center hover:scale-105
+                    ${isActive 
+                      ? 'bg-primary text-primary-foreground shadow-md' 
+                      : 'bg-secondary/70 hover:bg-secondary shadow-sm'}
+                  `}
                 >
                   {company}
                 </a>

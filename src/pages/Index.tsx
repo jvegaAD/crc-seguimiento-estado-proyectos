@@ -4,6 +4,7 @@ import ProjectReport from '../components/ProjectReport';
 import { ProjectData } from '@/types/project';
 import { fetchProjects } from '@/services/projectService';
 import { useToast } from '@/hooks/use-toast';
+import { Database } from 'lucide-react';
 
 const Index = () => {
   const [loading, setLoading] = useState(true);
@@ -39,7 +40,10 @@ const Index = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center animate-scale-in">
-          <div className="inline-block w-16 h-16 rounded-full border-4 border-primary border-t-transparent animate-spin mb-4"></div>
+          <div className="inline-block w-16 h-16 relative mb-8">
+            <Database className="w-16 h-16 text-primary animate-pulse" />
+            <div className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+          </div>
           <p className="text-muted-foreground">Cargando datos desde Supabase...</p>
         </div>
       </div>
