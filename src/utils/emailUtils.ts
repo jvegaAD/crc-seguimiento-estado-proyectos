@@ -9,8 +9,25 @@ export const sendEmail = async (company: string, tableId: string) => {
       return false;
     }
     
+    // Temporarily hide filter elements
+    const filterElements = table.querySelectorAll('.filter-input, .filter-button, .filter-indicator');
+    const hiddenElements: HTMLElement[] = [];
+    
+    filterElements.forEach(el => {
+      if (el instanceof HTMLElement) {
+        hiddenElements.push(el);
+        el.style.display = 'none';
+      }
+    });
+    
     // Capture table as image
     const canvas = await html2canvas(table as HTMLElement);
+    
+    // Restore visibility of filter elements
+    hiddenElements.forEach(el => {
+      el.style.display = '';
+    });
+    
     const imageDataUrl = canvas.toDataURL('image/png');
     
     let emailBody = `Resumen de Proyectos para ${company}:\n\n`;

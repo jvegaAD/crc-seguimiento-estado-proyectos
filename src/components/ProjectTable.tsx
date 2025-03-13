@@ -104,7 +104,7 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
   return (
     <div className="table-wrapper animate-scale-in overflow-x-auto">
       {hasActiveFilters && (
-        <div className="flex justify-between items-center bg-blue-50 p-2 rounded-t-lg border border-blue-200">
+        <div className="flex justify-between items-center bg-blue-50 p-2 rounded-t-lg border border-blue-200 filter-indicator">
           <span className="text-sm text-blue-700 font-medium">
             Filtros activos: {Object.keys(filters).length}
           </span>
@@ -112,7 +112,7 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
             variant="outline"
             size="sm"
             onClick={clearAllFilters}
-            className="border-blue-300 text-blue-700 hover:bg-blue-100"
+            className="border-blue-300 text-blue-700 hover:bg-blue-100 filter-button"
           >
             <FilterX className="h-4 w-4 mr-1" />
             Limpiar todos los filtros
@@ -148,7 +148,7 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
                       />
                     </div>
                   </div>
-                  <div className="flex gap-1 relative">
+                  <div className="flex gap-1 relative filter-input">
                     <Input
                       placeholder={`Filtrar ${label}`}
                       value={filters[key] || ''}
@@ -159,7 +159,7 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-8 w-8 absolute right-0 hover:bg-blue-800/20"
+                        className="h-8 w-8 absolute right-0 hover:bg-blue-800/20 filter-button"
                         onClick={() => clearFilter(key)}
                       >
                         <X className="h-4 w-4 text-white" />
@@ -167,7 +167,7 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
                     )}
                   </div>
                   {filters[key] && (
-                    <div className="text-xs bg-blue-800 text-white px-2 py-1 rounded-md">
+                    <div className="text-xs bg-blue-800 text-white px-2 py-1 rounded-md filter-indicator">
                       Filtro activo
                     </div>
                   )}
