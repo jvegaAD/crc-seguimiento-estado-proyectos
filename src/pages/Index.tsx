@@ -1,17 +1,6 @@
-
 import { useEffect, useState } from 'react';
 import ProjectReport from '../components/ProjectReport';
-
-// Sample data structure based on the HTML you provided
-interface ProjectData {
-  empresa: string;
-  nombreProyecto: string;
-  fechaEntrega: string;
-  id: string;
-  estado: string;
-  especialidad: string;
-  proyectoEstudio: string;
-}
+import { ProjectData } from '@/types/project';
 
 const Index = () => {
   const [loading, setLoading] = useState(true);

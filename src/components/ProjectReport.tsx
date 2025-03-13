@@ -1,18 +1,7 @@
-
 import { useRef, useState, useEffect } from 'react';
 import Header from './Header';
 import CompanySection from './CompanySection';
-
-// Sample data structure based on the HTML you provided
-interface ProjectData {
-  empresa: string;
-  nombreProyecto: string;
-  fechaEntrega: string;
-  id: string;
-  estado: string;
-  especialidad: string;
-  proyectoEstudio: string;
-}
+import { ProjectData } from '@/types/project';
 
 // Group projects by company
 interface CompanyProjects {

@@ -1,18 +1,8 @@
-
 import { useState } from 'react';
 import { sendEmail } from '../utils/emailUtils';
 import ProjectTable from './ProjectTable';
 import { useToast } from '@/hooks/use-toast';
-
-interface ProjectData {
-  empresa: string;
-  nombreProyecto: string;
-  fechaEntrega: string;
-  id: string;
-  estado: string;
-  especialidad: string;
-  proyectoEstudio: string;
-}
+import { ProjectData } from '@/types/project';
 
 interface CompanySectionProps {
   company: string;
