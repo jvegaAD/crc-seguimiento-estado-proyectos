@@ -133,10 +133,12 @@
   /* Gantt chart styles */
   .gantt-scroll-container {
     @apply w-full overflow-x-auto;
+    scrollbar-width: thin;
+    scrollbar-color: #9ca3af #f3f4f6;
   }
   
   .gantt-scroll-container::-webkit-scrollbar {
-    height: 10px;
+    height: 12px;
   }
   
   .gantt-scroll-container::-webkit-scrollbar-track {
@@ -144,7 +146,7 @@
   }
   
   .gantt-scroll-container::-webkit-scrollbar-thumb {
-    @apply bg-gray-400 rounded-full hover:bg-gray-500;
+    @apply bg-gray-400 rounded-full hover:bg-gray-500 transition-colors;
   }
 }
 

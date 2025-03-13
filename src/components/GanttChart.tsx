@@ -93,7 +93,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
   
   return (
     <div className="overflow-hidden border border-gray-300 rounded-lg shadow-xl animate-fade-in">
-      <ScrollArea className="w-full" orientation="horizontal">
+      <div className="gantt-scroll-container">
         <div className="min-w-[1200px]">
           {/* Header with title columns and timeline header together */}
           <div className="flex border-b border-gray-300">
@@ -123,7 +123,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
           </div>
           
           {/* Projects with timeline */}
-          <div className="max-h-[calc(100vh-300px)]">
+          <div>
             {Object.keys(groupedProjects).sort().map((nombreProyecto, groupIndex) => (
               <div key={nombreProyecto} className={`border-b border-gray-200 ${groupIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
                 <div className="font-medium bg-gray-100 px-2 py-1 border-b border-gray-300 sticky left-0">
@@ -171,7 +171,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
             ))}
           </div>
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 };
