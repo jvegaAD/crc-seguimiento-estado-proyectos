@@ -42,8 +42,8 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
         />
       )}
       
-      <table id={tableId} className="w-full border-collapse">
-        <thead>
+      <table id={tableId} className="w-full border-collapse border border-gray-300">
+        <thead className="bg-[#040c67] text-white">
           <tr>
             {columnHeaders.map(({ key, label }) => (
               <TableHeader
@@ -63,7 +63,7 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
         <tbody>
           {filteredAndSortedData.length === 0 ? (
             <tr>
-              <td colSpan={columnHeaders.length} className="p-4 text-center border">
+              <td colSpan={columnHeaders.length} className="p-4 text-center border border-gray-300">
                 No se encontraron resultados con los filtros aplicados
               </td>
             </tr>
@@ -71,17 +71,17 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
             filteredAndSortedData.map((row, index) => (
               <tr 
                 key={`${companyId}-${row.id}-${index}`}
-                className="border-b hover:bg-muted/50"
+                className="border-b border-gray-300 hover:bg-muted/50"
               >
-                <td className="p-2 border">{row.empresa}</td>
-                <td className="p-2 border">{row.nombreProyecto}</td>
-                <td className="p-2 border">{row.fechaEntrega}</td>
-                <td className="p-2 border">{row.id}</td>
-                <td className="p-2 border">
+                <td className="p-2 border border-gray-300">{row.empresa}</td>
+                <td className="p-2 border border-gray-300">{row.nombreProyecto}</td>
+                <td className="p-2 border border-gray-300">{row.fechaEntrega}</td>
+                <td className="p-2 border border-gray-300">{row.id}</td>
+                <td className="p-2 border border-gray-300">
                   <StatusBadge status={row.estado} />
                 </td>
-                <td className="p-2 border">{row.especialidad}</td>
-                <td className="p-2 border">{row.proyectoEstudio}</td>
+                <td className="p-2 border border-gray-300">{row.especialidad}</td>
+                <td className="p-2 border border-gray-300">{row.proyectoEstudio}</td>
               </tr>
             ))
           )}

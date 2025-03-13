@@ -66,7 +66,7 @@ const CompanySection = ({
                   Volver al índice
                 </a>
               </div>
-              <h2 className="text-2xl font-semibold text-[#040c67]">{company}</h2>
+              <h2 className="text-2xl font-semibold text-[#040c67]">Reporte por Empresa Responsable: {company}</h2>
               <p className="text-sm text-muted-foreground">
                 Informe al {reportDate}
               </p>
