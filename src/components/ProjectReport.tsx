@@ -71,7 +71,7 @@ const ProjectReport = ({
           <Grid2X2 className="transition-transform group-hover:-translate-y-1" />
         </Button>
         
-        <div id="companies-index" ref={indexRef} className="glass-panel rounded-xl p-6 md:p-8 mb-10 animate-scale-in shadow-lg \npx-4 py-2 my-[20px] mx-[50px] bg-white text-gray-800 text-center font-medium">
+        <div id="companies-index" ref={indexRef} className="glass-panel rounded-2xl p-8 md:p-10 mb-12 animate-fade-in shadow-xl \npx-6 py-4 my-[30px] mx-[60px] bg-gradient-to-r from-white via-gray-100 to-white \ntext-gray-900 text-lg font-semibold tracking-wide border border-gray-200">
           <h2 className="text-lg md:text-xl font-semibold mb-4">Índice de Empresas</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {companies.map(company => {
