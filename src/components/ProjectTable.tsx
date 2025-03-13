@@ -34,7 +34,7 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
   ];
 
   return (
-    <div className="table-wrapper animate-scale-in overflow-x-auto">
+    <div className="table-wrapper animate-scale-in overflow-x-auto shadow-xl border border-gray-300 rounded-lg">
       {hasActiveFilters && (
         <FilterNotification 
           filterCount={Object.keys(filters).length} 
