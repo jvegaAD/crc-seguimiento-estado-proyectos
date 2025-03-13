@@ -1,3 +1,4 @@
+
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { ChevronUp, ChevronDown, X } from 'lucide-react';
@@ -30,7 +31,12 @@ const TableHeader = ({
           </div>
         </div>
         <div className="flex gap-1 relative filter-input">
-          <Input placeholder={`Filtrar ${label}`} value={filterValue || ''} onChange={e => onFilter(e.target.value)} className="text-[8px] font-sans bg-white text-foreground\\\\\\\\n rounded-lg px-px py-0 my-px mx-0" />
+          <Input 
+            placeholder={`Filtrar ${label}`} 
+            value={filterValue || ''} 
+            onChange={e => onFilter(e.target.value)} 
+            className="text-[12px] font-sans bg-white text-gray-700 rounded-md px-3 py-1 my-1 mx-1 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500 transition-all" 
+          />
           {filterValue && <Button variant="ghost" size="icon" className="h-6 w-6 absolute right-0 hover:bg-blue-800/20 filter-button" onClick={onClearFilter}>
               <X className="h-3 w-3 text-white" />
             </Button>}
