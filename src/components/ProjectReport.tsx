@@ -72,14 +72,15 @@ const ProjectReport = ({
           <Grid2X2 className="transition-transform group-hover:-translate-y-1" />
         </Button>
         
-        <div id="companies-index" ref={indexRef} className="glass-panel rounded-2xl p-8 md:p-10 mb-12 animate-fade-in shadow-xl \npx-6 py-4 my-[30px] mx-[60px] bg-gradient-to-r from-white via-gray-100 to-white \ntext-gray-900 text-lg font-semibold tracking-wide border border-gray-200">
-          <h2 className="text-lg md:text-xl font-semibold mb-4 text-[#040c67]">Índice de Empresas</h2>
+        <div id="companies-index" ref={indexRef} className="rounded-xl p-6 md:p-8 mb-10 animate-fade-in shadow-md 
+          border border-gray-300 bg-white/90">
+          <h2 className="text-lg md:text-xl font-semibold mb-3 text-[#040c67]">Índice de Empresas</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
             {companies.map(company => {
             const companyId = `empresa_${company.replace(/\s+/g, '_')}`;
             const isActive = activeCompany === company;
             return <a key={company} href={`#${companyId}`} className={`
-                    px-3 py-2 rounded-lg transition-all duration-200 text-sm
+                    px-3 py-1.5 rounded-lg transition-all duration-200 text-sm
                     flex items-center justify-center text-center hover:scale-105
                     ${isActive ? 'bg-[#040c67] text-primary-foreground shadow-md' : 'bg-secondary/70 hover:bg-secondary shadow-sm'}
                   `}>
