@@ -16,10 +16,11 @@ interface ProjectData {
 const Index = () => {
   const [loading, setLoading] = useState(true);
   
-  // In a real application, you would fetch this data from an API
+  // In a real application, you would fetch this data from the Excel file
   const reportDate = "12/03/2025";
   
-  // Sample data for demonstration
+  // Sample data for demonstration - in production, this would be loaded from Excel
+  // Data file location: src/data/excel/projects.xlsx
   const sampleProjects: ProjectData[] = [
     {
       empresa: "AAA",
@@ -114,9 +115,10 @@ const Index = () => {
   ];
 
   useEffect(() => {
-    // Simulate data loading
+    // Simulate data loading from Excel file
     const timer = setTimeout(() => {
       setLoading(false);
+      console.log("Data would be loaded from src/data/excel/projects.xlsx in production");
     }, 1000);
     
     return () => clearTimeout(timer);
