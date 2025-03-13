@@ -1,7 +1,8 @@
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ProjectData } from '@/types/project';
 import StatusBadge from './table/StatusBadge';
+import { ScrollArea } from './ui/scroll-area';
 
 interface GanttChartProps {
   projects: ProjectData[];
@@ -65,8 +66,16 @@ const GanttChart = ({ projects }: GanttChartProps) => {
     };
   };
   
+  // Function to format date as DD/MM
+  const formatShortDate = (date: Date) => {
+    return date.toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: '2-digit',
+    });
+  };
+  
   // Function to format date as DD/MM/YYYY
-  const formatDate = (date: Date) => {
+  const formatFullDate = (date: Date) => {
     return date.toLocaleDateString('es-ES', {
       day: '2-digit',
       month: '2-digit',
@@ -82,67 +91,91 @@ const GanttChart = ({ projects }: GanttChartProps) => {
     return today.toDateString() === taskDate.toDateString();
   };
   
+  // Reference to the timeline area for scrolling
+  const timelineRef = useRef<HTMLDivElement>(null);
+  
   return (
-    <div className="overflow-x-auto animate-fade-in">
-      <div className="min-w-max">
-        {/* Header with timeline */}
-        <div className="flex border-b border-gray-300">
-          <div className="min-w-[600px] flex-shrink-0 bg-[#040c67] text-white p-2">
-            <div className="grid grid-cols-6 gap-2">
-              <div className="col-span-1">Nombre Proyecto</div>
-              <div className="col-span-1">ID</div>
-              <div className="col-span-1">Empresa</div>
-              <div className="col-span-1">Estado</div>
-              <div className="col-span-1">Especialidad</div>
-              <div className="col-span-1">Proyecto/Estudio</div>
-            </div>
+    <div className="overflow-hidden border border-gray-300 rounded-lg shadow-xl animate-fade-in">
+      <div className="flex flex-col">
+        {/* Header with title columns */}
+        <div className="flex">
+          <div className="grid grid-cols-6 gap-0 bg-[#040c67] text-white font-medium">
+            <div className="p-2 w-[180px] border-r border-gray-500">Nombre Proyecto</div>
+            <div className="p-2 w-[100px] border-r border-gray-500">ID</div>
+            <div className="p-2 w-[120px] border-r border-gray-500">Empresa</div>
+            <div className="p-2 w-[100px] border-r border-gray-500">Estado</div>
+            <div className="p-2 w-[120px] border-r border-gray-500">Especialidad</div>
+            <div className="p-2 w-[150px]">Proyecto/Estudio</div>
           </div>
           
-          <div className="flex-grow relative p-2 bg-[#040c67] text-white overflow-hidden">
-            <div className="flex justify-between w-full text-xs">
-              <span>{formatDate(minDate)}</span>
-              <span>{formatDate(maxDate)}</span>
-            </div>
+          {/* Timeline header */}
+          <div className="bg-[#040c67] text-white flex-1 overflow-hidden">
+            <ScrollArea orientation="horizontal" className="w-full overflow-auto">
+              <div className="flex min-w-[800px]" ref={timelineRef}>
+                {timelineDates.map((date, index) => (
+                  <div 
+                    key={index} 
+                    className="flex-shrink-0 w-[40px] p-1 text-center border-r border-gray-500 text-xs"
+                    title={formatFullDate(date)}
+                  >
+                    {formatShortDate(date)}
+                  </div>
+                ))}
+              </div>
+            </ScrollArea>
           </div>
         </div>
         
-        {/* Projects */}
-        {Object.keys(groupedProjects).sort().map((nombreProyecto, groupIndex) => (
-          <div key={nombreProyecto} className={`border-b border-gray-200 ${groupIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
-            <div className="font-medium bg-gray-100 px-2 py-1 sticky left-0">
-              {nombreProyecto}
-            </div>
-            
-            {groupedProjects[nombreProyecto].map((project, projectIndex) => (
-              <div key={`${project.id}-${projectIndex}`} className="flex hover:bg-gray-100">
-                <div className="min-w-[600px] flex-shrink-0 p-2">
-                  <div className="grid grid-cols-6 gap-2 text-sm">
-                    <div className="col-span-1 truncate">{project.nombreProyecto}</div>
-                    <div className="col-span-1 truncate">{project.id}</div>
-                    <div className="col-span-1 truncate">{project.empresa}</div>
-                    <div className="col-span-1">
+        {/* Projects with timeline */}
+        <div className="overflow-auto max-h-[calc(100vh-300px)]">
+          {Object.keys(groupedProjects).sort().map((nombreProyecto, groupIndex) => (
+            <div key={nombreProyecto} className={`border-b border-gray-200 ${groupIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+              <div className="font-medium bg-gray-100 px-2 py-1 border-b border-gray-300 sticky left-0">
+                {nombreProyecto}
+              </div>
+              
+              {groupedProjects[nombreProyecto].map((project, projectIndex) => (
+                <div key={`${project.id}-${projectIndex}`} className="flex hover:bg-gray-100 border-b border-gray-200">
+                  {/* Project info columns */}
+                  <div className="grid grid-cols-6 gap-0 flex-shrink-0">
+                    <div className="p-2 truncate w-[180px] border-r border-gray-200">{project.nombreProyecto}</div>
+                    <div className="p-2 truncate w-[100px] border-r border-gray-200">{project.id}</div>
+                    <div className="p-2 truncate w-[120px] border-r border-gray-200">{project.empresa}</div>
+                    <div className="p-2 w-[100px] border-r border-gray-200">
                       <StatusBadge status={project.estado} />
                     </div>
-                    <div className="col-span-1 truncate">{project.especialidad}</div>
-                    <div className="col-span-1 truncate">{project.proyectoEstudio}</div>
+                    <div className="p-2 truncate w-[120px] border-r border-gray-200">{project.especialidad}</div>
+                    <div className="p-2 truncate w-[150px] border-r border-gray-200">{project.proyectoEstudio}</div>
+                  </div>
+                  
+                  {/* Timeline for this project */}
+                  <div className="flex-1 relative min-h-[42px] flex-shrink-0">
+                    <ScrollArea orientation="horizontal" className="w-full overflow-auto">
+                      <div className="flex min-w-[800px] h-full relative">
+                        {timelineDates.map((date, dateIndex) => (
+                          <div 
+                            key={dateIndex} 
+                            className="flex-shrink-0 w-[40px] h-full border-r border-gray-200"
+                          />
+                        ))}
+                        
+                        {project.fechaEntrega && (
+                          <div 
+                            className={`absolute top-[8px] h-6 w-6 rounded-full border-2 border-gray-400 flex items-center justify-center
+                              ${isToday(project.fechaEntrega) ? 'bg-cyan-500' : 'bg-white'}
+                            `}
+                            style={getTaskPosition(project.fechaEntrega)}
+                            title={`Fecha de entrega: ${project.fechaEntrega}`}
+                          />
+                        )}
+                      </div>
+                    </ScrollArea>
                   </div>
                 </div>
-                
-                <div className="flex-grow relative p-2 min-h-[42px]">
-                  {project.fechaEntrega && (
-                    <div 
-                      className={`absolute h-6 w-6 rounded-full border border-gray-400 
-                        ${isToday(project.fechaEntrega) ? 'bg-cyan-500' : 'bg-white'}
-                      `}
-                      style={getTaskPosition(project.fechaEntrega)}
-                      title={`Fecha de entrega: ${project.fechaEntrega}`}
-                    ></div>
-                  )}
-                </div>
-              </div>
-            ))}
-          </div>
-        ))}
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

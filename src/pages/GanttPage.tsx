@@ -8,6 +8,7 @@ import { ProjectData } from '@/types/project';
 import { fetchProjects } from '@/services/projectService';
 import { useToast } from '@/hooks/use-toast';
 import { Database } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 const GanttPage = () => {
   const [loading, setLoading] = useState(true);
@@ -67,7 +68,7 @@ const GanttPage = () => {
       <Header title="Carta Gantt" subtitle={`Fecha del informe: ${reportDate}`} date={reportDate} />
       <NavigationMenu />
       
-      <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12">
+      <div className="max-w-[95%] mx-auto px-4 mt-12">
         <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
         
         <div className="mt-8">
