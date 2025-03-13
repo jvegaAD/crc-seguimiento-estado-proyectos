@@ -64,6 +64,9 @@ export const sendEmail = async (company: string, tableId: string) => {
     // But it doesn't support image attachments, so we'll notify users
     const mailtoLink = `mailto:jvega.CRC@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody + "\n\n[La imagen de la tabla se ha omitido debido a limitaciones del protocolo mailto. Para incluir imágenes, utilice un cliente de correo electrónico.]")}`;
     
+    // Get report date from Index.tsx (or could be passed as parameter)
+    const reportDate = "12/03/2025";
+    
     // Open in a new tab to give the option to download the image
     const imageWindow = window.open('');
     if (imageWindow) {
@@ -83,7 +86,7 @@ export const sendEmail = async (company: string, tableId: string) => {
           <body>
             <div class="instructions">
               <h2>Tabla de Proyectos - ${company}</h2>
-              <p>Se ha generado una imagen de la tabla de proyectos. Puede descargarla y adjuntarla manualmente a su correo electrónico.</p>
+              <p>Fecha del informe: ${reportDate}</p>
             </div>
             <img src="${imageDataUrl}" alt="Tabla de Proyectos ${company}" />
             <div class="buttons">
