@@ -1,15 +1,18 @@
 
 import { useEffect, useState } from 'react';
-import ProjectReport from '../components/ProjectReport';
+import Header from '../components/Header';
+import StatusFilter from '../components/StatusFilter';
+import GanttChart from '../components/GanttChart';
 import NavigationMenu from '../components/NavigationMenu';
 import { ProjectData } from '@/types/project';
 import { fetchProjects } from '@/services/projectService';
 import { useToast } from '@/hooks/use-toast';
 import { Database } from 'lucide-react';
 
-const Index = () => {
+const GanttPage = () => {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<ProjectData[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const { toast } = useToast();
   
   // Use the current date for the report
@@ -20,7 +23,6 @@ const Index = () => {
       try {
         setLoading(true);
         const data = await fetchProjects();
-        console.log('Fetched projects from Supabase:', data);
         setProjects(data);
       } catch (error) {
         console.error('Error loading projects:', error);
@@ -36,6 +38,15 @@ const Index = () => {
     
     loadProjects();
   }, [toast]);
+  
+  // Filter projects by status if any statuses are selected
+  const filteredProjects = selectedStatuses.length > 0
+    ? projects.filter(project => selectedStatuses.includes(project.estado))
+    : projects;
+
+  const handleStatusFilterChange = (statuses: string[]) => {
+    setSelectedStatuses(statuses);
+  };
 
   if (loading) {
     return (
@@ -52,15 +63,19 @@ const Index = () => {
   }
 
   return (
-    <>
+    <div className="min-h-screen pb-20">
+      <Header title="Carta Gantt" subtitle={`Fecha del informe: ${reportDate}`} date={reportDate} />
       <NavigationMenu />
-      <ProjectReport
-        title="Reporte por Empresa Responsable"
-        reportDate={reportDate}
-        projects={projects}
-      />
-    </>
+      
+      <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12">
+        <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+        
+        <div className="mt-8">
+          <GanttChart projects={filteredProjects} />
+        </div>
+      </div>
+    </div>
   );
 };
 
-export default Index;
+export default GanttPage;
