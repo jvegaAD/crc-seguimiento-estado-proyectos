@@ -33,20 +33,20 @@ const CompanySection = ({
       if (!success) {
         toast({
           variant: "destructive",
-          title: "Error al enviar el correo",
+          title: "Error al generar la imagen",
           description: "No se pudo generar la imagen de la tabla. Por favor, inténtelo de nuevo."
         });
       } else {
         toast({
           title: "Imagen generada correctamente",
-          description: "Se ha abierto una nueva ventana con la imagen para descargar y adjuntar a su correo."
+          description: "Se ha abierto una nueva ventana con opciones para descargar, copiar, o enviar por correo."
         });
       }
     } catch (error) {
       console.error('Failed to send email', error);
       toast({
         variant: "destructive",
-        title: "Error al enviar el correo",
+        title: "Error al procesar la solicitud",
         description: "Ocurrió un error inesperado. Por favor, inténtelo de nuevo."
       });
     } finally {
@@ -90,8 +90,6 @@ const CompanySection = ({
             </span>
           </button>
         </div>
-        
-        {/* Removed the report date banner that was here */}
         
         {projects.length > 0 ? <ProjectTable companyId={companyId} tableId={tableId} data={projects} /> : <div className="py-12 text-center text-muted-foreground">
             No hay proyectos disponibles para esta empresa.
