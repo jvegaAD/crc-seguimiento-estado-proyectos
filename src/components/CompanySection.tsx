@@ -91,10 +91,7 @@ const CompanySection = ({
           </button>
         </div>
         
-        {/* Report date banner */}
-        <div className="bg-secondary p-3 rounded-md mb-4 text-center font-medium border-b border-border">
-          Fecha del informe: {reportDate}
-        </div>
+        {/* Removed the report date banner that was here */}
         
         {projects.length > 0 ? <ProjectTable companyId={companyId} tableId={tableId} data={projects} /> : <div className="py-12 text-center text-muted-foreground">
             No hay proyectos disponibles para esta empresa.
