@@ -129,6 +129,23 @@
   .page-exit-active {
     @apply opacity-0 transition-opacity duration-300;
   }
+  
+  /* Gantt chart styles */
+  .gantt-scroll-container {
+    @apply w-full overflow-x-auto;
+  }
+  
+  .gantt-scroll-container::-webkit-scrollbar {
+    height: 10px;
+  }
+  
+  .gantt-scroll-container::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-full;
+  }
+  
+  .gantt-scroll-container::-webkit-scrollbar-thumb {
+    @apply bg-gray-400 rounded-full hover:bg-gray-500;
+  }
 }
 
 @layer utilities {

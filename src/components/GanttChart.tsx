@@ -1,5 +1,5 @@
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { ProjectData } from '@/types/project';
 import StatusBadge from './table/StatusBadge';
 import { ScrollArea } from './ui/scroll-area';
@@ -93,26 +93,26 @@ const GanttChart = ({ projects }: GanttChartProps) => {
   
   return (
     <div className="overflow-hidden border border-gray-300 rounded-lg shadow-xl animate-fade-in">
-      <ScrollArea className="w-full">
+      <ScrollArea className="w-full" orientation="horizontal">
         <div className="min-w-[1200px]">
-          {/* Header with title columns */}
-          <div className="flex">
-            <div className="grid grid-cols-6 gap-0 bg-[#040c67] text-white font-medium">
-              <div className="p-2 w-[180px] border-r border-gray-500">Nombre Proyecto</div>
-              <div className="p-2 w-[80px] border-r border-gray-500">ID</div>
-              <div className="p-2 w-[120px] border-r border-gray-500">Empresa</div>
-              <div className="p-2 w-[100px] border-r border-gray-500">Estado</div>
-              <div className="p-2 w-[120px] border-r border-gray-500">Especialidad</div>
-              <div className="p-2 w-[150px] border-r border-gray-500">Proyecto/Estudio</div>
+          {/* Header with title columns and timeline header together */}
+          <div className="flex border-b border-gray-300">
+            <div className="grid grid-cols-6 gap-0 bg-[#040c67] text-white font-medium flex-shrink-0">
+              <div className="p-2 w-[180px] border-r border-gray-400">Nombre Proyecto</div>
+              <div className="p-2 w-[80px] border-r border-gray-400">ID</div>
+              <div className="p-2 w-[120px] border-r border-gray-400">Empresa</div>
+              <div className="p-2 w-[100px] border-r border-gray-400">Estado</div>
+              <div className="p-2 w-[120px] border-r border-gray-400">Especialidad</div>
+              <div className="p-2 w-[150px] border-r border-gray-400">Proyecto/Estudio</div>
             </div>
             
-            {/* Timeline header */}
+            {/* Timeline header - now part of the same row as column headers */}
             <div className="bg-[#040c67] text-white flex-1 overflow-hidden">
               <div className="flex min-w-[800px]">
                 {timelineDates.map((date, index) => (
                   <div 
                     key={index} 
-                    className="flex-shrink-0 w-[40px] p-1 text-center border-r border-gray-500 text-xs"
+                    className="flex-shrink-0 w-[40px] p-1 text-center border-r border-gray-400 text-xs"
                     title={formatFullDate(date)}
                   >
                     {formatShortDate(date)}
