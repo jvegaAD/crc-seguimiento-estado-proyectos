@@ -1,6 +1,8 @@
+
 import { useRef, useState, useEffect } from 'react';
 import Header from './Header';
 import CompanySection from './CompanySection';
+import StatusFilter from './StatusFilter';
 import { ProjectData } from '@/types/project';
 import { Button } from '@/components/ui/button';
 import { Grid2X2 } from 'lucide-react';
@@ -9,21 +11,29 @@ import { Grid2X2 } from 'lucide-react';
 interface CompanyProjects {
   [company: string]: ProjectData[];
 }
+
 interface ProjectReportProps {
   title: string;
   reportDate: string;
   projects: ProjectData[];
 }
+
 const ProjectReport = ({
   title,
   reportDate,
   projects
 }: ProjectReportProps) => {
   const [activeCompany, setActiveCompany] = useState<string | null>(null);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
   const indexRef = useRef<HTMLDivElement>(null);
 
+  // Filter projects by status if any statuses are selected
+  const filteredProjects = selectedStatuses.length > 0
+    ? projects.filter(project => selectedStatuses.includes(project.estado))
+    : projects;
+
   // Group projects by company
-  const groupedProjects = projects.reduce((acc: CompanyProjects, project) => {
+  const groupedProjects = filteredProjects.reduce((acc: CompanyProjects, project) => {
     const company = project.empresa;
     if (!acc[company]) {
       acc[company] = [];
@@ -58,15 +68,23 @@ const ProjectReport = ({
     });
     return () => observer.disconnect();
   }, [companies]);
+
   const scrollToIndex = () => {
     indexRef.current?.scrollIntoView({
       behavior: 'smooth'
     });
   };
+
+  const handleStatusFilterChange = (statuses: string[]) => {
+    setSelectedStatuses(statuses);
+  };
+
   return <div className="min-h-screen pb-20">
       <Header title={title} subtitle={`Fecha del informe: ${reportDate}`} date={reportDate} />
       
       <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12">
+        <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+        
         <Button onClick={scrollToIndex} className="fixed right-8 bottom-8 z-10 p-3 rounded-full bg-[#040c67] text-primary-foreground shadow-lg hover:bg-[#040c67]/90 transition-all duration-300 group animate-float" aria-label="Scroll to Index" size="icon">
           <Grid2X2 className="transition-transform group-hover:-translate-y-1" />
         </Button>
@@ -92,8 +110,22 @@ const ProjectReport = ({
           </div>
         </div>
         
-        {companies.map(company => <CompanySection key={company} company={company} projects={groupedProjects[company]} reportDate={reportDate} />)}
+        {companies.length > 0 ? (
+          companies.map(company => (
+            <CompanySection 
+              key={company} 
+              company={company} 
+              projects={groupedProjects[company]} 
+              reportDate={reportDate} 
+            />
+          ))
+        ) : (
+          <div className="text-center p-10 bg-gray-50 rounded-lg border border-gray-200 shadow-sm">
+            <p className="text-muted-foreground">No hay proyectos que coincidan con los filtros seleccionados.</p>
+          </div>
+        )}
       </div>
     </div>;
 };
+
 export default ProjectReport;
