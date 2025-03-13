@@ -1,3 +1,4 @@
+
 import html2canvas from 'html2canvas';
 
 export const sendEmail = async (company: string, tableId: string) => {
@@ -83,9 +84,12 @@ export const sendEmail = async (company: string, tableId: string) => {
               }
               .container {
                 background-color: white;
-                width: 100%;
-                padding: 20px 0;
+                width: 90%;
+                max-width: 1200px;
+                margin: 20px auto;
+                padding: 20px;
                 box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                border-radius: 8px;
               }
               .header {
                 text-align: center;
@@ -105,12 +109,16 @@ export const sendEmail = async (company: string, tableId: string) => {
               .image-container {
                 width: 100%;
                 text-align: center;
+                padding: 20px;
+                box-sizing: border-box;
               }
               img { 
                 max-width: 100%;
-                width: 100%;
+                width: auto;
                 display: block;
                 margin: 0 auto;
+                border: 1px solid #e5e7eb;
+                border-radius: 4px;
               }
               .buttons { 
                 display: flex;

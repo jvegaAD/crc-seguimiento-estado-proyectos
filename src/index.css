@@ -14,7 +14,7 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 4%;
 
-    --primary: 200 98% 39%;
+    --primary: 232 99% 21%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 240 5% 96%;
@@ -31,7 +31,7 @@
 
     --border: 240 6% 90%;
     --input: 240 6% 90%;
-    --ring: 200 98% 39%;
+    --ring: 232 99% 21%;
 
     --radius: 0.7rem;
   }
@@ -105,7 +105,7 @@
   }
   
   .data-table td {
-    @apply px-4 py-3 border-b border-border/60 text-sm;
+    @apply px-4 py-3 border border-border/60 text-sm;
   }
   
   .data-table tr:nth-child(even) {
