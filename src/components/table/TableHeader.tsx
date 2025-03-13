@@ -86,7 +86,7 @@ const TableHeader = ({
             className="flex items-center justify-between w-full text-[12px] font-sans bg-white text-gray-700 
               rounded-md px-3 py-1 my-1 mx-1 border border-gray-300 
               focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
-              transition-all"
+              transition-all filter-button"
           >
             <span className="truncate">
               {filterValue && filterValue.length > 0 
@@ -97,7 +97,7 @@ const TableHeader = ({
           </button>
           
           {isDropdownOpen && (
-            <div className="absolute z-50 mt-1 w-full max-h-64 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg">
+            <div className="absolute z-50 mt-1 w-full max-h-64 overflow-y-auto bg-white border border-gray-300 rounded-md shadow-lg filter-dropdown">
               <div className="p-2 sticky top-0 bg-white border-b">
                 <Input
                   type="text"
@@ -107,7 +107,7 @@ const TableHeader = ({
                   className="text-[12px] font-sans bg-white text-gray-700 
                   rounded-md px-3 py-1 border border-gray-300 
                   focus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500
-                  transition-all"
+                  transition-all filter-input"
                 />
               </div>
               
@@ -140,7 +140,7 @@ const TableHeader = ({
                     onFilter([]);
                     setIsDropdownOpen(false);
                   }}
-                  className="text-[12px] text-gray-700 hover:bg-gray-200"
+                  className="text-[12px] text-gray-700 hover:bg-gray-200 filter-button"
                 >
                   Limpiar
                 </Button>
@@ -148,7 +148,7 @@ const TableHeader = ({
                   variant="default" 
                   size="sm" 
                   onClick={() => setIsDropdownOpen(false)}
-                  className="text-[12px] bg-blue-500 hover:bg-blue-600"
+                  className="text-[12px] bg-blue-500 hover:bg-blue-600 filter-button"
                 >
                   Aplicar
                 </Button>

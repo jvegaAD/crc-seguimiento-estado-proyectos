@@ -10,7 +10,7 @@ export const sendEmail = async (company: string, tableId: string) => {
     }
     
     // Temporarily hide filter elements
-    const filterElements = table.querySelectorAll('.filter-input, .filter-button, .filter-indicator');
+    const filterElements = table.querySelectorAll('.filter-container, .filter-button, .filter-indicator');
     const hiddenElements: HTMLElement[] = [];
     
     filterElements.forEach(el => {
@@ -75,24 +75,98 @@ export const sendEmail = async (company: string, tableId: string) => {
           <head>
             <title>Resumen de Proyectos - ${company}</title>
             <style>
-              body { font-family: Arial, sans-serif; padding: 20px; }
-              .instructions { max-width: 600px; margin: 0 auto 20px; line-height: 1.5; text-align: left; }
-              .buttons { margin: 20px 0; text-align: center; }
-              button { padding: 10px 15px; margin: 0 10px; cursor: pointer; background-color: #006699; color: white; border: none; border-radius: 4px; }
-              button:hover { background-color: #005588; }
-              img { max-width: 100%; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+              body { 
+                font-family: Arial, sans-serif; 
+                padding: 20px; 
+                background-color: #f5f7fa;
+                color: #333;
+                max-width: 900px;
+                margin: 0 auto;
+              }
+              .container {
+                background-color: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                padding: 30px;
+                margin-bottom: 20px;
+              }
+              .header {
+                text-align: center;
+                margin-bottom: 30px;
+                border-bottom: 1px solid #e5e7eb;
+                padding-bottom: 20px;
+              }
+              h2 {
+                color: #2d3748;
+                margin-bottom: 8px;
+              }
+              .date {
+                color: #718096;
+                font-size: 14px;
+                margin-bottom: 20px;
+              }
+              .instructions { 
+                line-height: 1.5; 
+                margin-bottom: 30px; 
+                padding: 15px;
+                background-color: #f0f7ff;
+                border-radius: 6px;
+                border-left: 4px solid #3182ce;
+              }
+              .buttons { 
+                display: flex;
+                justify-content: center;
+                gap: 15px;
+                margin: 30px 0; 
+              }
+              button { 
+                padding: 12px 24px; 
+                cursor: pointer; 
+                background-color: #2b6cb0; 
+                color: white; 
+                border: none; 
+                border-radius: 4px;
+                font-weight: 500;
+                transition: all 0.2s ease;
+              }
+              button:hover { 
+                background-color: #1e4e8c;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+              }
+              .image-container {
+                border: 1px solid #e2e8f0;
+                border-radius: 6px;
+                overflow: hidden;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+              }
+              img { 
+                max-width: 100%;
+                display: block;
+              }
             </style>
           </head>
           <body>
-            <div class="instructions">
-              <h2 style="text-align: left;">Resumen de Proyectos a cargo de ${company}</h2>
-              <p style="text-align: left;">Fecha del informe: ${reportDate}</p>
+            <div class="container">
+              <div class="header">
+                <h2>Resumen de Proyectos a cargo de ${company}</h2>
+                <div class="date">Fecha del informe: ${reportDate}</div>
+              </div>
+              
+              <div class="instructions">
+                <p>A continuación se muestra una imagen con el resumen de los proyectos. Puede descargar esta imagen o abrir su cliente de correo para enviarla.</p>
+              </div>
+              
+              <div class="image-container">
+                <img src="${imageDataUrl}" alt="Resumen de Proyectos ${company}" />
+              </div>
+              
+              <div class="buttons">
+                <button onclick="window.location.href='${mailtoLink}'">Abrir Cliente de Correo</button>
+                <button onclick="downloadImage()">Descargar Imagen</button>
+              </div>
             </div>
-            <img src="${imageDataUrl}" alt="Resumen de Proyectos ${company}" />
-            <div class="buttons">
-              <button onclick="window.location.href='${mailtoLink}'">Abrir Cliente de Correo</button>
-              <button onclick="downloadImage()">Descargar Imagen</button>
-            </div>
+            
             <script>
               function downloadImage() {
                 const a = document.createElement('a');
