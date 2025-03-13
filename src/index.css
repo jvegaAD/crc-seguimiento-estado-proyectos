@@ -130,6 +130,25 @@
     @apply opacity-0 transition-opacity duration-300;
   }
   
+  /* Page scroll container */
+  .page-scroll-container {
+    @apply w-full overflow-x-auto;
+    scrollbar-width: thin;
+    scrollbar-color: #9ca3af #f3f4f6;
+  }
+  
+  .page-scroll-container::-webkit-scrollbar {
+    height: 12px;
+  }
+  
+  .page-scroll-container::-webkit-scrollbar-track {
+    @apply bg-gray-100 rounded-full;
+  }
+  
+  .page-scroll-container::-webkit-scrollbar-thumb {
+    @apply bg-gray-400 rounded-full hover:bg-gray-500 transition-colors;
+  }
+  
   /* Gantt chart styles */
   .gantt-scroll-container {
     @apply w-full overflow-x-auto;

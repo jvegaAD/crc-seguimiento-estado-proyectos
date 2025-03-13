@@ -67,11 +67,15 @@ const GanttPage = () => {
       <Header title="Carta Gantt" subtitle={`Fecha del informe: ${reportDate}`} date={reportDate} />
       <NavigationMenu />
       
-      <div className="max-w-[95%] mx-auto px-4 mt-12">
-        <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
-        
-        <div className="mt-8">
-          <GanttChart projects={filteredProjects} />
+      <div className="page-scroll-container">
+        <div className="min-w-[1400px]">
+          <div className="px-4 mt-12">
+            <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+            
+            <div className="mt-8">
+              <GanttChart projects={filteredProjects} />
+            </div>
+          </div>
         </div>
       </div>
     </div>

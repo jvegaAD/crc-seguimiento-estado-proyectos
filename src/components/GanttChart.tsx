@@ -2,7 +2,6 @@
 import { useState, useEffect } from 'react';
 import { ProjectData } from '@/types/project';
 import StatusBadge from './table/StatusBadge';
-import { ScrollArea } from './ui/scroll-area';
 
 interface GanttChartProps {
   projects: ProjectData[];
@@ -92,84 +91,82 @@ const GanttChart = ({ projects }: GanttChartProps) => {
   };
   
   return (
-    <div className="overflow-hidden border border-gray-300 rounded-lg shadow-xl animate-fade-in">
-      <div className="gantt-scroll-container">
-        <div className="min-w-[1200px]">
-          {/* Header with title columns and timeline header together */}
-          <div className="flex border-b border-gray-300">
-            <div className="grid grid-cols-6 gap-0 bg-[#040c67] text-white font-medium flex-shrink-0">
-              <div className="p-2 w-[180px] border-r border-gray-400">Nombre Proyecto</div>
-              <div className="p-2 w-[80px] border-r border-gray-400">ID</div>
-              <div className="p-2 w-[120px] border-r border-gray-400">Empresa</div>
-              <div className="p-2 w-[100px] border-r border-gray-400">Estado</div>
-              <div className="p-2 w-[120px] border-r border-gray-400">Especialidad</div>
-              <div className="p-2 w-[150px] border-r border-gray-400">Proyecto/Estudio</div>
-            </div>
-            
-            {/* Timeline header - now part of the same row as column headers */}
-            <div className="bg-[#040c67] text-white flex-1 overflow-hidden">
-              <div className="flex min-w-[800px]">
-                {timelineDates.map((date, index) => (
-                  <div 
-                    key={index} 
-                    className="flex-shrink-0 w-[40px] p-1 text-center border-r border-gray-400 text-xs"
-                    title={formatFullDate(date)}
-                  >
-                    {formatShortDate(date)}
-                  </div>
-                ))}
-              </div>
-            </div>
+    <div className="border border-gray-300 rounded-lg shadow-xl animate-fade-in">
+      <div className="min-w-[1200px]">
+        {/* Header with title columns and timeline header together */}
+        <div className="flex border-b border-gray-300">
+          <div className="grid grid-cols-6 gap-0 bg-[#040c67] text-white font-medium flex-shrink-0">
+            <div className="p-2 w-[180px] border-r border-gray-400">Nombre Proyecto</div>
+            <div className="p-2 w-[80px] border-r border-gray-400">ID</div>
+            <div className="p-2 w-[120px] border-r border-gray-400">Empresa</div>
+            <div className="p-2 w-[100px] border-r border-gray-400">Estado</div>
+            <div className="p-2 w-[120px] border-r border-gray-400">Especialidad</div>
+            <div className="p-2 w-[150px] border-r border-gray-400">Proyecto/Estudio</div>
           </div>
           
-          {/* Projects with timeline */}
-          <div>
-            {Object.keys(groupedProjects).sort().map((nombreProyecto, groupIndex) => (
-              <div key={nombreProyecto} className={`border-b border-gray-200 ${groupIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
-                <div className="font-medium bg-gray-100 px-2 py-1 border-b border-gray-300 sticky left-0">
-                  {nombreProyecto}
+          {/* Timeline header - now part of the same row as column headers */}
+          <div className="bg-[#040c67] text-white flex-1 overflow-hidden">
+            <div className="flex min-w-[800px]">
+              {timelineDates.map((date, index) => (
+                <div 
+                  key={index} 
+                  className="flex-shrink-0 w-[40px] p-1 text-center border-r border-gray-400 text-xs"
+                  title={formatFullDate(date)}
+                >
+                  {formatShortDate(date)}
                 </div>
-                
-                {groupedProjects[nombreProyecto].map((project, projectIndex) => (
-                  <div key={`${project.id}-${projectIndex}`} className="flex hover:bg-gray-100 border-b border-gray-200">
-                    {/* Project info columns */}
-                    <div className="grid grid-cols-6 gap-0 flex-shrink-0">
-                      <div className="p-2 truncate w-[180px] border-r border-gray-200">{project.nombreProyecto}</div>
-                      <div className="p-2 truncate w-[80px] border-r border-gray-200">{project.id}</div>
-                      <div className="p-2 truncate w-[120px] border-r border-gray-200">{project.empresa}</div>
-                      <div className="p-2 w-[100px] border-r border-gray-200">
-                        <StatusBadge status={project.estado} />
-                      </div>
-                      <div className="p-2 truncate w-[120px] border-r border-gray-200">{project.especialidad}</div>
-                      <div className="p-2 truncate w-[150px] border-r border-gray-200">{project.proyectoEstudio}</div>
+              ))}
+            </div>
+          </div>
+        </div>
+        
+        {/* Projects with timeline */}
+        <div>
+          {Object.keys(groupedProjects).sort().map((nombreProyecto, groupIndex) => (
+            <div key={nombreProyecto} className={`border-b border-gray-200 ${groupIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+              <div className="font-medium bg-gray-100 px-2 py-1 border-b border-gray-300 sticky left-0">
+                {nombreProyecto}
+              </div>
+              
+              {groupedProjects[nombreProyecto].map((project, projectIndex) => (
+                <div key={`${project.id}-${projectIndex}`} className="flex hover:bg-gray-100 border-b border-gray-200">
+                  {/* Project info columns */}
+                  <div className="grid grid-cols-6 gap-0 flex-shrink-0">
+                    <div className="p-2 truncate w-[180px] border-r border-gray-200">{project.nombreProyecto}</div>
+                    <div className="p-2 truncate w-[80px] border-r border-gray-200">{project.id}</div>
+                    <div className="p-2 truncate w-[120px] border-r border-gray-200">{project.empresa}</div>
+                    <div className="p-2 w-[100px] border-r border-gray-200">
+                      <StatusBadge status={project.estado} />
                     </div>
-                    
-                    {/* Timeline for this project */}
-                    <div className="flex-1 relative min-h-[42px] flex-shrink-0">
-                      <div className="flex min-w-[800px] h-full relative">
-                        {timelineDates.map((date, dateIndex) => (
-                          <div 
-                            key={dateIndex} 
-                            className="flex-shrink-0 w-[40px] h-full border-r border-gray-200"
-                          />
-                        ))}
-                        
-                        {project.fechaEntrega && (
-                          <div 
-                            className={`absolute top-[8px] h-6 w-6 rounded-full border-2 border-gray-400 flex items-center justify-center
-                              ${isToday(project.fechaEntrega) ? 'bg-cyan-500' : 'bg-white'}
-                            `}
-                            style={getTaskPosition(project.fechaEntrega)}
-                            title={`Fecha de entrega: ${project.fechaEntrega}`}
-                          />
-                        )}
-                      </div>
+                    <div className="p-2 truncate w-[120px] border-r border-gray-200">{project.especialidad}</div>
+                    <div className="p-2 truncate w-[150px] border-r border-gray-200">{project.proyectoEstudio}</div>
+                  </div>
+                  
+                  {/* Timeline for this project */}
+                  <div className="flex-1 relative min-h-[42px] flex-shrink-0">
+                    <div className="flex min-w-[800px] h-full relative">
+                      {timelineDates.map((date, dateIndex) => (
+                        <div 
+                          key={dateIndex} 
+                          className="flex-shrink-0 w-[40px] h-full border-r border-gray-200"
+                        />
+                      ))}
+                      
+                      {project.fechaEntrega && (
+                        <div 
+                          className={`absolute top-[8px] h-6 w-6 rounded-full border-2 border-gray-400 flex items-center justify-center
+                            ${isToday(project.fechaEntrega) ? 'bg-cyan-500' : 'bg-white'}
+                          `}
+                          style={getTaskPosition(project.fechaEntrega)}
+                          title={`Fecha de entrega: ${project.fechaEntrega}`}
+                        />
+                      )}
                     </div>
                   </div>
-                ))}
-              </div>
-            ))}
-          </div>
+                </div>
+              ))}
+            </div>
+          ))}
         </div>
       </div>
     </div>
