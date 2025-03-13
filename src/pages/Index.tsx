@@ -41,8 +41,8 @@ const Index = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center animate-scale-in">
           <div className="inline-block w-16 h-16 relative mb-8">
-            <Database className="w-16 h-16 text-primary animate-pulse" />
-            <div className="absolute inset-0 rounded-full border-4 border-primary border-t-transparent animate-spin"></div>
+            <Database className="w-16 h-16 text-[#040c67] animate-pulse" />
+            <div className="absolute inset-0 rounded-full border-4 border-[#040c67] border-t-transparent animate-spin"></div>
           </div>
           <p className="text-muted-foreground">Cargando datos desde Supabase...</p>
         </div>

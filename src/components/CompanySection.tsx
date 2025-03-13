@@ -4,6 +4,8 @@ import { sendEmail } from '../utils/emailUtils';
 import ProjectTable from './ProjectTable';
 import { useToast } from '@/hooks/use-toast';
 import { ProjectData } from '@/types/project';
+import { ChevronUp } from 'lucide-react';
+
 interface CompanySectionProps {
   company: string;
   projects: ProjectData[];
@@ -57,14 +59,14 @@ const CompanySection = ({
           <div className="w-full flex justify-between items-center mb-4">
             <div>
               <div className="mb-1">
-                <a href="#companies-index" className="text-[12px] font-sans bg-white text-gray-700 \nrounded-md px-3 py-1 my-1 mx-1 border border-gray-300 \nfocus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500\ntransition-all">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="m18 15-6-6-6 6" />
-                  </svg>
+                <a href="#companies-index" className="inline-flex items-center gap-1 bg-[#040c67] text-white 
+                  rounded-md px-3 py-1.5 text-sm font-medium shadow-sm 
+                  hover:bg-[#040c67]/90 transition-all">
+                  <ChevronUp className="h-4 w-4" />
                   Volver al índice
                 </a>
               </div>
-              <h2 className="text-2xl font-semibold">{company}</h2>
+              <h2 className="text-2xl font-semibold text-[#040c67]">{company}</h2>
               <p className="text-sm text-muted-foreground">
                 Informe al {reportDate}
               </p>

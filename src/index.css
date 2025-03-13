@@ -62,9 +62,9 @@
   }
   
   .btn-primary {
-    @apply px-4 py-2 bg-primary text-primary-foreground rounded-lg
+    @apply px-4 py-2 bg-[#040c67] text-primary-foreground rounded-lg
     font-medium transition-all duration-300 shadow-sm
-    hover:shadow-md hover:bg-primary/90 active:scale-[0.98];
+    hover:shadow-md hover:bg-[#040c67]/90 active:scale-[0.98];
   }
   
   .subtle-scroll {
@@ -101,7 +101,7 @@
   }
   
   .data-table th {
-    @apply bg-primary text-primary-foreground px-4 py-3 text-left font-medium text-sm tracking-wider cursor-pointer transition-colors duration-200 hover:bg-primary/90;
+    @apply bg-[#040c67] text-primary-foreground px-4 py-3 text-left font-medium text-sm tracking-wider cursor-pointer transition-colors duration-200 hover:bg-[#040c67]/90;
   }
   
   .data-table td {
