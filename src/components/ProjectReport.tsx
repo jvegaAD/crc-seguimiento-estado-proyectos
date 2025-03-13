@@ -78,7 +78,7 @@ const ProjectReport = ({ title, reportDate, projects }: ProjectReportProps) => {
     <div className="min-h-screen pb-20">
       <Header 
         title={title} 
-        subtitle="Estado de Proyectos por Empresa"
+        subtitle={`Fecha del informe: ${reportDate}`}
         date={reportDate}
       />
       

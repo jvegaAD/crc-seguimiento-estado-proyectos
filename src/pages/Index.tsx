@@ -135,7 +135,7 @@ const Index = () => {
 
   return (
     <ProjectReport
-      title="Reporte por Empresa responsable"
+      title="Reporte por Empresa Responsable"
       reportDate={reportDate}
       projects={sampleProjects}
     />
