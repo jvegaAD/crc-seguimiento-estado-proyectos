@@ -75,9 +75,9 @@ export const sendEmail = async (company: string, tableId: string) => {
           <head>
             <title>Tabla de Proyectos - ${company}</title>
             <style>
-              body { font-family: Arial, sans-serif; text-align: center; padding: 20px; }
-              .instructions { max-width: 600px; margin: 0 auto 20px; line-height: 1.5; }
-              .buttons { margin: 20px 0; }
+              body { font-family: Arial, sans-serif; padding: 20px; }
+              .instructions { max-width: 600px; margin: 0 auto 20px; line-height: 1.5; text-align: left; }
+              .buttons { margin: 20px 0; text-align: center; }
               button { padding: 10px 15px; margin: 0 10px; cursor: pointer; background-color: #006699; color: white; border: none; border-radius: 4px; }
               button:hover { background-color: #005588; }
               img { max-width: 100%; border: 1px solid #ddd; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
@@ -85,8 +85,8 @@ export const sendEmail = async (company: string, tableId: string) => {
           </head>
           <body>
             <div class="instructions">
-              <h2>Tabla de Proyectos - ${company}</h2>
-              <p>Fecha del informe: ${reportDate}</p>
+              <h2 style="text-align: left;">Tabla de Proyectos - ${company}</h2>
+              <p style="text-align: left;">Fecha del informe: ${reportDate}</p>
             </div>
             <img src="${imageDataUrl}" alt="Tabla de Proyectos ${company}" />
             <div class="buttons">
