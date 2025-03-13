@@ -82,7 +82,10 @@ const ProjectReport = ({
             return <a key={company} href={`#${companyId}`} className={`
                     px-3 py-1 rounded-lg transition-all duration-200 text-sm
                     flex items-center justify-center text-center hover:scale-105
-                    ${isActive ? 'bg-[#040c67] text-primary-foreground shadow-md' : 'bg-secondary/70 hover:bg-secondary shadow-sm'}
+                    border ${isActive ? 'border-transparent' : 'border-gray-200'} 
+                    ${isActive 
+                      ? 'bg-[#040c67] text-primary-foreground shadow-md' 
+                      : 'bg-secondary/70 hover:bg-secondary shadow-sm hover:shadow'}
                   `}>
                   {company}
                 </a>;
