@@ -52,9 +52,10 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
                 label={label}
                 sortConfig={sortConfig}
                 onSort={handleSort}
-                filterValue={filters[key] || ''}
-                onFilter={(value) => handleFilter(key, value)}
+                filterValue={filters[key]}
+                onFilter={(values) => handleFilter(key, values)}
                 onClearFilter={() => clearFilter(key)}
+                data={data}
               />
             ))}
           </tr>

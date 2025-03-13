@@ -8,7 +8,7 @@ export function useTableData(data: ProjectData[]) {
     direction: 'asc'
   });
 
-  const [filters, setFilters] = useState<Partial<Record<keyof ProjectData, string>>>({});
+  const [filters, setFilters] = useState<Partial<Record<keyof ProjectData, string[]>>>({});
 
   const handleSort = (key: keyof ProjectData) => {
     setSortConfig(current => ({
@@ -17,10 +17,10 @@ export function useTableData(data: ProjectData[]) {
     }));
   };
 
-  const handleFilter = (key: keyof ProjectData, value: string) => {
+  const handleFilter = (key: keyof ProjectData, values: string[]) => {
     setFilters(current => ({
       ...current,
-      [key]: value
+      [key]: values
     }));
   };
 
@@ -43,13 +43,14 @@ export function useTableData(data: ProjectData[]) {
 
     // Apply filters
     Object.keys(filters).forEach(key => {
-      const filterValue = filters[key as keyof ProjectData];
-      if (filterValue) {
-        processedData = processedData.filter(item =>
-          String(item[key as keyof ProjectData])
-            .toLowerCase()
-            .includes(filterValue.toLowerCase())
-        );
+      const filterValues = filters[key as keyof ProjectData];
+      if (filterValues && filterValues.length > 0) {
+        processedData = processedData.filter(item => {
+          const itemValue = String(item[key as keyof ProjectData]).toLowerCase();
+          return filterValues.some(filterValue => 
+            itemValue.includes(filterValue.toLowerCase())
+          );
+        });
       }
     });
 
