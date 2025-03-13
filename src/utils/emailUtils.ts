@@ -30,7 +30,7 @@ export const sendEmail = async (company: string, tableId: string) => {
     
     const imageDataUrl = canvas.toDataURL('image/png');
     
-    let emailBody = `Resumen de Proyectos para ${company}:\n\n`;
+    let emailBody = `Resumen de Proyectos a cargo de ${company}:\n\n`;
     
     // Add image placeholder with attachment cid reference
     emailBody += `[Esta es una imagen del resumen de proyectos. Si no la visualiza, active las imágenes en su cliente de correo]\n\n`;
@@ -73,7 +73,7 @@ export const sendEmail = async (company: string, tableId: string) => {
       imageWindow.document.write(`
         <html>
           <head>
-            <title>Tabla de Proyectos - ${company}</title>
+            <title>Resumen de Proyectos - ${company}</title>
             <style>
               body { font-family: Arial, sans-serif; padding: 20px; }
               .instructions { max-width: 600px; margin: 0 auto 20px; line-height: 1.5; text-align: left; }
@@ -85,10 +85,10 @@ export const sendEmail = async (company: string, tableId: string) => {
           </head>
           <body>
             <div class="instructions">
-              <h2 style="text-align: left;">Tabla de Proyectos - ${company}</h2>
+              <h2 style="text-align: left;">Resumen de Proyectos a cargo de ${company}</h2>
               <p style="text-align: left;">Fecha del informe: ${reportDate}</p>
             </div>
-            <img src="${imageDataUrl}" alt="Tabla de Proyectos ${company}" />
+            <img src="${imageDataUrl}" alt="Resumen de Proyectos ${company}" />
             <div class="buttons">
               <button onclick="window.location.href='${mailtoLink}'">Abrir Cliente de Correo</button>
               <button onclick="downloadImage()">Descargar Imagen</button>
@@ -97,7 +97,7 @@ export const sendEmail = async (company: string, tableId: string) => {
               function downloadImage() {
                 const a = document.createElement('a');
                 a.href = "${imageDataUrl}";
-                a.download = "Tabla_Proyectos_${company.replace(/\s+/g, '_')}.png";
+                a.download = "Resumen_Proyectos_${company.replace(/\s+/g, '_')}.png";
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
