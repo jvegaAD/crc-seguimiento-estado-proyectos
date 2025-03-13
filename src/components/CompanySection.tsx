@@ -22,6 +22,7 @@ const CompanySection = ({
   const [sending, setSending] = useState(false);
   const companyId = `empresa_${company.replace(/\s+/g, '_')}`;
   const tableId = `table_${company.replace(/\s+/g, '_')}`;
+  
   const handleSendEmail = async () => {
     setSending(true);
     try {
@@ -29,7 +30,10 @@ const CompanySection = ({
         title: "Generando imagen de la tabla...",
         description: "Por favor espere mientras se procesa la información."
       });
-      const success = await sendEmail(company, tableId);
+      
+      // This will handle both copying to clipboard and opening the email window
+      const success = await sendEmail(company, tableId, reportDate);
+      
       if (!success) {
         toast({
           variant: "destructive",
@@ -39,7 +43,7 @@ const CompanySection = ({
       } else {
         toast({
           title: "Imagen generada correctamente",
-          description: "Se ha abierto una nueva ventana con opciones para descargar, copiar, o enviar por correo."
+          description: "La imagen ha sido copiada al portapapeles y se ha abierto una ventana para enviar el correo."
         });
       }
     } catch (error) {
@@ -53,6 +57,7 @@ const CompanySection = ({
       setSending(false);
     }
   };
+  
   return <section id={companyId} className="mb-20 scroll-mt-20 animate-fade-in">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col items-center mb-6">
