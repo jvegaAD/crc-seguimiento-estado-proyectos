@@ -8,7 +8,6 @@ import { ProjectData } from '@/types/project';
 import { fetchProjects } from '@/services/projectService';
 import { useToast } from '@/hooks/use-toast';
 import { Database } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 const GanttPage = () => {
   const [loading, setLoading] = useState(true);

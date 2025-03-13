@@ -91,27 +91,24 @@ const GanttChart = ({ projects }: GanttChartProps) => {
     return today.toDateString() === taskDate.toDateString();
   };
   
-  // Reference to the timeline area for scrolling
-  const timelineRef = useRef<HTMLDivElement>(null);
-  
   return (
     <div className="overflow-hidden border border-gray-300 rounded-lg shadow-xl animate-fade-in">
-      <div className="flex flex-col">
-        {/* Header with title columns */}
-        <div className="flex">
-          <div className="grid grid-cols-6 gap-0 bg-[#040c67] text-white font-medium">
-            <div className="p-2 w-[180px] border-r border-gray-500">Nombre Proyecto</div>
-            <div className="p-2 w-[100px] border-r border-gray-500">ID</div>
-            <div className="p-2 w-[120px] border-r border-gray-500">Empresa</div>
-            <div className="p-2 w-[100px] border-r border-gray-500">Estado</div>
-            <div className="p-2 w-[120px] border-r border-gray-500">Especialidad</div>
-            <div className="p-2 w-[150px]">Proyecto/Estudio</div>
-          </div>
-          
-          {/* Timeline header */}
-          <div className="bg-[#040c67] text-white flex-1 overflow-hidden">
-            <ScrollArea orientation="horizontal" className="w-full overflow-auto">
-              <div className="flex min-w-[800px]" ref={timelineRef}>
+      <ScrollArea className="w-full">
+        <div className="min-w-[1200px]">
+          {/* Header with title columns */}
+          <div className="flex">
+            <div className="grid grid-cols-6 gap-0 bg-[#040c67] text-white font-medium">
+              <div className="p-2 w-[180px] border-r border-gray-500">Nombre Proyecto</div>
+              <div className="p-2 w-[80px] border-r border-gray-500">ID</div>
+              <div className="p-2 w-[120px] border-r border-gray-500">Empresa</div>
+              <div className="p-2 w-[100px] border-r border-gray-500">Estado</div>
+              <div className="p-2 w-[120px] border-r border-gray-500">Especialidad</div>
+              <div className="p-2 w-[150px] border-r border-gray-500">Proyecto/Estudio</div>
+            </div>
+            
+            {/* Timeline header */}
+            <div className="bg-[#040c67] text-white flex-1 overflow-hidden">
+              <div className="flex min-w-[800px]">
                 {timelineDates.map((date, index) => (
                   <div 
                     key={index} 
@@ -122,35 +119,33 @@ const GanttChart = ({ projects }: GanttChartProps) => {
                   </div>
                 ))}
               </div>
-            </ScrollArea>
+            </div>
           </div>
-        </div>
-        
-        {/* Projects with timeline */}
-        <div className="overflow-auto max-h-[calc(100vh-300px)]">
-          {Object.keys(groupedProjects).sort().map((nombreProyecto, groupIndex) => (
-            <div key={nombreProyecto} className={`border-b border-gray-200 ${groupIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
-              <div className="font-medium bg-gray-100 px-2 py-1 border-b border-gray-300 sticky left-0">
-                {nombreProyecto}
-              </div>
-              
-              {groupedProjects[nombreProyecto].map((project, projectIndex) => (
-                <div key={`${project.id}-${projectIndex}`} className="flex hover:bg-gray-100 border-b border-gray-200">
-                  {/* Project info columns */}
-                  <div className="grid grid-cols-6 gap-0 flex-shrink-0">
-                    <div className="p-2 truncate w-[180px] border-r border-gray-200">{project.nombreProyecto}</div>
-                    <div className="p-2 truncate w-[100px] border-r border-gray-200">{project.id}</div>
-                    <div className="p-2 truncate w-[120px] border-r border-gray-200">{project.empresa}</div>
-                    <div className="p-2 w-[100px] border-r border-gray-200">
-                      <StatusBadge status={project.estado} />
+          
+          {/* Projects with timeline */}
+          <div className="max-h-[calc(100vh-300px)]">
+            {Object.keys(groupedProjects).sort().map((nombreProyecto, groupIndex) => (
+              <div key={nombreProyecto} className={`border-b border-gray-200 ${groupIndex % 2 === 0 ? 'bg-gray-50' : 'bg-white'}`}>
+                <div className="font-medium bg-gray-100 px-2 py-1 border-b border-gray-300 sticky left-0">
+                  {nombreProyecto}
+                </div>
+                
+                {groupedProjects[nombreProyecto].map((project, projectIndex) => (
+                  <div key={`${project.id}-${projectIndex}`} className="flex hover:bg-gray-100 border-b border-gray-200">
+                    {/* Project info columns */}
+                    <div className="grid grid-cols-6 gap-0 flex-shrink-0">
+                      <div className="p-2 truncate w-[180px] border-r border-gray-200">{project.nombreProyecto}</div>
+                      <div className="p-2 truncate w-[80px] border-r border-gray-200">{project.id}</div>
+                      <div className="p-2 truncate w-[120px] border-r border-gray-200">{project.empresa}</div>
+                      <div className="p-2 w-[100px] border-r border-gray-200">
+                        <StatusBadge status={project.estado} />
+                      </div>
+                      <div className="p-2 truncate w-[120px] border-r border-gray-200">{project.especialidad}</div>
+                      <div className="p-2 truncate w-[150px] border-r border-gray-200">{project.proyectoEstudio}</div>
                     </div>
-                    <div className="p-2 truncate w-[120px] border-r border-gray-200">{project.especialidad}</div>
-                    <div className="p-2 truncate w-[150px] border-r border-gray-200">{project.proyectoEstudio}</div>
-                  </div>
-                  
-                  {/* Timeline for this project */}
-                  <div className="flex-1 relative min-h-[42px] flex-shrink-0">
-                    <ScrollArea orientation="horizontal" className="w-full overflow-auto">
+                    
+                    {/* Timeline for this project */}
+                    <div className="flex-1 relative min-h-[42px] flex-shrink-0">
                       <div className="flex min-w-[800px] h-full relative">
                         {timelineDates.map((date, dateIndex) => (
                           <div 
@@ -169,14 +164,14 @@ const GanttChart = ({ projects }: GanttChartProps) => {
                           />
                         )}
                       </div>
-                    </ScrollArea>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
-          ))}
+                ))}
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </ScrollArea>
     </div>
   );
 };
