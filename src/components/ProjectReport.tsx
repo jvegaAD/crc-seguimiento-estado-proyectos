@@ -50,8 +50,10 @@ const ProjectReport = ({
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
+          // Extract company name from ID
           const id = entry.target.id;
-          const company = id.replace('empresa_', '').replace(/_/g, ' ');
+          // Convert from hyphenated format back to company name
+          const company = id.replace('empresa-', '').split('-').join(' ');
           setActiveCompany(company);
         }
       });
@@ -62,7 +64,8 @@ const ProjectReport = ({
 
     // Observe all company sections
     companies.forEach(company => {
-      const companyId = `empresa_${company.replace(/\s+/g, '_')}`;
+      // Use the same ID format as in CompanySection
+      const companyId = `empresa-${company.replace(/[\s.]+/g, '-').toLowerCase()}`;
       const element = document.getElementById(companyId);
       if (element) observer.observe(element);
     });
@@ -94,19 +97,22 @@ const ProjectReport = ({
           <h2 className="text-lg md:text-xl font-semibold mb-3 text-[#040c67]">Índice de Empresas</h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-y-1 gap-x-2">
             {companies.map(company => {
-            const companyId = `empresa_${company.replace(/\s+/g, '_')}`;
-            const isActive = activeCompany === company;
-            return <a key={company} href={`#${companyId}`} className={`
-                    px-3 py-1 rounded-lg transition-all duration-200 text-sm
-                    flex items-center justify-center text-center hover:scale-105
-                    border ${isActive ? 'border-transparent' : 'border-gray-300'} 
-                    ${isActive 
-                      ? 'bg-[#040c67] text-primary-foreground shadow-md' 
-                      : 'bg-[#F1F0FB] hover:bg-[#E8E7F5] border-gray-300 shadow-sm hover:shadow-md'}
-                  `}>
-                  {company}
-                </a>;
-          })}
+              // Use the same ID format as in CompanySection
+              const companyId = `empresa-${company.replace(/[\s.]+/g, '-').toLowerCase()}`;
+              const isActive = activeCompany === company;
+              return <a key={company} 
+                      href={`#${companyId}`} 
+                      className={`
+                        px-3 py-1 rounded-lg transition-all duration-200 text-sm
+                        flex items-center justify-center text-center hover:scale-105
+                        border ${isActive ? 'border-transparent' : 'border-gray-300'} 
+                        ${isActive 
+                          ? 'bg-[#040c67] text-primary-foreground shadow-md' 
+                          : 'bg-[#F1F0FB] hover:bg-[#E8E7F5] border-gray-300 shadow-sm hover:shadow-md'}
+                      `}>
+                      {company}
+                    </a>;
+            })}
           </div>
         </div>
         
