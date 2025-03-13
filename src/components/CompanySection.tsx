@@ -20,8 +20,10 @@ const CompanySection = ({
     toast
   } = useToast();
   const [sending, setSending] = useState(false);
-  const companyId = `empresa_${company.replace(/\s+/g, '_')}`;
-  const tableId = `table_${company.replace(/\s+/g, '_')}`;
+  
+  // Update how we create the IDs to ensure they don't have problematic characters
+  const companyId = `empresa-${company.replace(/[\s.]+/g, '-').toLowerCase()}`;
+  const tableId = `table-${company.replace(/[\s.]+/g, '-').toLowerCase()}`;
   
   const handleSendEmail = async () => {
     setSending(true);
@@ -30,6 +32,8 @@ const CompanySection = ({
         title: "Generando imagen de la tabla...",
         description: "Por favor espere mientras se procesa la información."
       });
+      
+      console.log("Using table ID:", tableId);
       
       // This will handle both copying to clipboard and opening the email window
       const success = await sendEmail(company, tableId, reportDate);

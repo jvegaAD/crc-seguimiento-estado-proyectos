@@ -1,10 +1,17 @@
+
 import html2canvas from 'html2canvas';
 import { Clipboard, ClipboardCheck } from 'lucide-react';
 
 // This function handles both copying the image to clipboard and opening the email dialog
 export const sendEmail = async (company: string, tableId: string, reportDate: string) => {
   try {
-    const table = document.querySelector(`#${tableId}`);
+    // Make sure table ID is correctly formatted
+    // The error is happening because the table ID contains periods and spaces
+    // which need to be properly escaped in the selector
+    console.log('Looking for table with ID:', tableId);
+    
+    // Use getElementById instead of querySelector for better ID lookup
+    const table = document.getElementById(tableId);
     if (!table) {
       console.error('Table not found:', tableId);
       return false;
