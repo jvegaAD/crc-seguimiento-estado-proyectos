@@ -17,9 +17,9 @@ const FilterNotification = ({ filterCount, onClearAllFilters }: FilterNotificati
         variant="outline"
         size="sm"
         onClick={onClearAllFilters}
-        className="border-blue-300 text-blue-700 hover:bg-blue-100 filter-button"
+        className="border-blue-300 text-blue-700 hover:bg-blue-100 h-7 px-2 filter-button"
       >
-        <FilterX className="h-4 w-4 mr-1" />
+        <FilterX className="h-3 w-3 mr-1" />
         Limpiar todos los filtros
       </Button>
     </div>

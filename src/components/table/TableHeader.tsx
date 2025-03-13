@@ -1,7 +1,9 @@
+
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import { ChevronUp, ChevronDown, X } from 'lucide-react';
 import { ProjectData, SortConfig } from '@/types/project';
+
 interface TableHeaderProps {
   columnKey: keyof ProjectData;
   label: string;
@@ -11,6 +13,7 @@ interface TableHeaderProps {
   onFilter: (value: string) => void;
   onClearFilter: () => void;
 }
+
 const TableHeader = ({
   columnKey,
   label,
@@ -31,8 +34,8 @@ const TableHeader = ({
         </div>
         <div className="flex gap-1 relative filter-input">
           <Input placeholder={`Filtrar ${label}`} value={filterValue || ''} onChange={e => onFilter(e.target.value)} className="text-[9px] font-sans bg-white text-foreground\\\\n rounded-lg px-px py-0 my-px mx-0" />
-          {filterValue && <Button variant="ghost" size="icon" className="h-8 w-8 absolute right-0 hover:bg-blue-800/20 filter-button" onClick={onClearFilter}>
-              <X className="h-4 w-4 text-white" />
+          {filterValue && <Button variant="ghost" size="icon" className="h-6 w-6 absolute right-0 hover:bg-blue-800/20 filter-button" onClick={onClearFilter}>
+              <X className="h-3 w-3 text-white" />
             </Button>}
         </div>
         {filterValue && <div className="text-xs bg-blue-800 text-white px-2 py-1 rounded-md filter-indicator">
@@ -41,4 +44,5 @@ const TableHeader = ({
       </div>
     </th>;
 };
+
 export default TableHeader;
