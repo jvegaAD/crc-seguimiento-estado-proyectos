@@ -1,4 +1,3 @@
-
 import { useRef, useState, useEffect } from 'react';
 import Header from './Header';
 import CompanySection from './CompanySection';
@@ -85,7 +84,7 @@ const ProjectReport = ({
                     border ${isActive ? 'border-transparent' : 'border-gray-300'} 
                     ${isActive 
                       ? 'bg-[#040c67] text-primary-foreground shadow-md' 
-                      : 'bg-secondary/70 hover:bg-secondary border-gray-300 shadow-sm hover:shadow-md'}
+                      : 'bg-[#F1F0FB] hover:bg-[#E8E7F5] border-gray-300 shadow-sm hover:shadow-md'}
                   `}>
                   {company}
                 </a>;
