@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import ProjectReport from '../components/ProjectReport';
 import { ProjectData } from '@/types/project';
@@ -9,7 +10,7 @@ const Index = () => {
   const reportDate = "12/03/2025";
   
   // Sample data for demonstration - in production, this would be loaded from Excel
-  // Data file location: src/data/excel/projects.xlsx
+  // Data file location: src/data/excel/01_empresa_responsables.xlsx
   const sampleProjects: ProjectData[] = [
     {
       empresa: "AAA",
@@ -107,7 +108,7 @@ const Index = () => {
     // Simulate data loading from Excel file
     const timer = setTimeout(() => {
       setLoading(false);
-      console.log("Data would be loaded from src/data/excel/projects.xlsx in production");
+      console.log("Data would be loaded from src/data/excel/01_empresa_responsables.xlsx in production");
     }, 1000);
     
     return () => clearTimeout(timer);
