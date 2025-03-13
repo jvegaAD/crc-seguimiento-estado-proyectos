@@ -1,3 +1,4 @@
+
 import { useState } from 'react';
 import { sendEmail } from '../utils/emailUtils';
 import ProjectTable from './ProjectTable';
@@ -52,23 +53,25 @@ const CompanySection = ({
   };
   return <section id={companyId} className="mb-20 scroll-mt-20 animate-fade-in">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <div className="mb-1">
-              <a href="#companies-index" className="text-[12px] font-sans bg-white text-gray-700 \nrounded-md px-3 py-1 my-1 mx-1 border border-gray-300 \nfocus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500\ntransition-all">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="m18 15-6-6-6 6" />
-                </svg>
-                Volver al índice
-              </a>
+        <div className="flex flex-col items-center mb-6">
+          <div className="w-full flex justify-between items-center mb-4">
+            <div>
+              <div className="mb-1">
+                <a href="#companies-index" className="text-[12px] font-sans bg-white text-gray-700 \nrounded-md px-3 py-1 my-1 mx-1 border border-gray-300 \nfocus:outline-none focus:ring-2 focus:ring-blue-400 focus:border-blue-500\ntransition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="m18 15-6-6-6 6" />
+                  </svg>
+                  Volver al índice
+                </a>
+              </div>
+              <h2 className="text-2xl font-semibold">{company}</h2>
+              <p className="text-sm text-muted-foreground">
+                Informe al {reportDate}
+              </p>
             </div>
-            <h2 className="text-2xl font-semibold">{company}</h2>
-            <p className="text-sm text-muted-foreground">
-              Informe al {reportDate}
-            </p>
           </div>
           
-          <button onClick={handleSendEmail} disabled={sending} className="btn-primary group relative">
+          <button onClick={handleSendEmail} disabled={sending} className="btn-primary group relative mb-4">
             <span className="flex items-center gap-2">
               {sending ? <>
                   <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
