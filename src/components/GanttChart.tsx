@@ -30,6 +30,12 @@ interface Task {
   collapsed: boolean;
   level: number;
   dependencies?: string[]; // IDs of tasks this task depends on
+  empresa?: string;
+  especialidad?: string;
+  proyectoEstudio?: string;
+  estado?: string;
+  fechaEntrega?: string;
+  originalId?: string;
 }
 
 const GanttChart = ({ projects }: GanttChartProps) => {
@@ -39,113 +45,27 @@ const GanttChart = ({ projects }: GanttChartProps) => {
   const [showGuideline, setShowGuideline] = useState<boolean>(true);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [uniqueProjects, setUniqueProjects] = useState<string[]>([]);
+  const [selectedProject, setSelectedProject] = useState<string | null>(null);
   
-  // Generate sample tasks from project data
+  // Extract unique project names and get date ranges
   useEffect(() => {
     if (projects.length > 0) {
-      // Group projects by nombreProyecto to create task hierarchies
-      const projectGroups = projects.reduce((acc, project) => {
-        if (!acc[project.nombreProyecto]) {
-          acc[project.nombreProyecto] = [];
-        }
-        acc[project.nombreProyecto].push(project);
-        return acc;
-      }, {} as Record<string, ProjectData[]>);
+      // Get unique project names
+      const projectNames = [...new Set(projects.map(p => p.nombreProyecto))];
+      setUniqueProjects(projectNames);
       
-      // Transform project data into tasks with subtasks
-      const transformedTasks: Task[] = [];
-      
-      Object.keys(projectGroups).forEach((projectName, index) => {
-        // Create parent task
-        const mainTask: Task = {
-          id: `task-${index}`,
-          name: projectName,
-          duration: '7,5 días',
-          startDate: new Date(new Date().setDate(new Date().getDate() - 7)),
-          endDate: new Date(new Date().setDate(new Date().getDate() + 7)),
-          progress: 30,
-          subtasks: [],
-          collapsed: false,
-          level: 0
-        };
-        
-        // Create subtasks based on projects in the group
-        const projects = projectGroups[projectName];
-        const subtasks: Task[] = projects.map((project, subIndex) => {
-          return {
-            id: `task-${index}-${subIndex}`,
-            name: `${project.especialidad} - ${project.estado}`,
-            duration: '1 día',
-            startDate: project.fechaEntrega ? new Date(project.fechaEntrega) : 
-              new Date(new Date().setDate(new Date().getDate() + subIndex)),
-            endDate: project.fechaEntrega ? 
-              new Date(new Date(project.fechaEntrega).setDate(new Date(project.fechaEntrega).getDate() + 1)) : 
-              new Date(new Date().setDate(new Date().getDate() + subIndex + 1)),
-            progress: subIndex * 10 % 100, // Sample progress
-            subtasks: [],
-            collapsed: false,
-            level: 1,
-            dependencies: subIndex > 0 ? [`task-${index}-${subIndex-1}`] : undefined
-          };
-        });
-        
-        // Add some sample nested subtasks to the first subtask if it exists
-        if (subtasks.length > 0) {
-          const nestedTasks = [
-            {
-              id: `task-${index}-0-0`,
-              name: 'Identificar objetivos y metas',
-              duration: '1 día',
-              startDate: subtasks[0].startDate,
-              endDate: new Date(subtasks[0].startDate!.getTime() + 24*60*60*1000),
-              progress: 50,
-              subtasks: [],
-              collapsed: false,
-              level: 2
-            },
-            {
-              id: `task-${index}-0-1`,
-              name: 'Desarrollar estrategias y planes',
-              duration: '1 día',
-              startDate: new Date(subtasks[0].startDate!.getTime() + 24*60*60*1000),
-              endDate: new Date(subtasks[0].startDate!.getTime() + 2*24*60*60*1000),
-              progress: 25,
-              subtasks: [],
-              collapsed: false,
-              level: 2,
-              dependencies: [`task-${index}-0-0`]
-            }
-          ];
-          
-          subtasks[0].subtasks = nestedTasks;
-        }
-        
-        mainTask.subtasks = subtasks;
-        transformedTasks.push(mainTask);
-      });
-      
-      setTasks(transformedTasks);
+      // Set the first project as selected by default
+      if (projectNames.length > 0 && !selectedProject) {
+        setSelectedProject(projectNames[0]);
+      }
       
       // Find min and max dates for the timeline
-      const allStartDates = transformedTasks.flatMap(task => {
-        const taskStartDate = task.startDate ? [task.startDate] : [];
-        const subtaskStartDates = task.subtasks.flatMap(subtask => {
-          return subtask.startDate ? [subtask.startDate] : [];
-        });
-        return [...taskStartDate, ...subtaskStartDates];
-      });
+      const allDates = projects.map(p => p.fechaEntrega ? new Date(p.fechaEntrega) : null).filter(Boolean) as Date[];
       
-      const allEndDates = transformedTasks.flatMap(task => {
-        const taskEndDate = task.endDate ? [task.endDate] : [];
-        const subtaskEndDates = task.subtasks.flatMap(subtask => {
-          return subtask.endDate ? [subtask.endDate] : [];
-        });
-        return [...taskEndDate, ...subtaskEndDates];
-      });
-      
-      if (allStartDates.length > 0 && allEndDates.length > 0) {
-        const min = new Date(Math.min(...allStartDates.map(d => d.getTime())));
-        const max = new Date(Math.max(...allEndDates.map(d => d.getTime())));
+      if (allDates.length > 0) {
+        const min = new Date(Math.min(...allDates.map(d => d.getTime())));
+        const max = new Date(Math.max(...allDates.map(d => d.getTime())));
         
         // Add buffer days before and after
         min.setDate(min.getDate() - 5);
@@ -155,7 +75,54 @@ const GanttChart = ({ projects }: GanttChartProps) => {
         setMaxDate(max);
       }
     }
-  }, [projects]);
+  }, [projects, selectedProject]);
+  
+  // Generate tasks for selected project
+  useEffect(() => {
+    if (!selectedProject || projects.length === 0) return;
+    
+    // Filter projects for the selected project name
+    const projectTasks = projects.filter(p => p.nombreProyecto === selectedProject);
+    
+    // Create a main task for the project
+    const mainTask: Task = {
+      id: `project-${selectedProject.replace(/\s+/g, '-')}`,
+      name: selectedProject,
+      duration: '--- días',
+      progress: 0,
+      subtasks: [],
+      collapsed: false,
+      level: 0
+    };
+    
+    // Create subtasks for each item in the filtered projects
+    const subtasks: Task[] = projectTasks.map((project, index) => {
+      // Parse the date
+      const entregaDate = project.fechaEntrega ? new Date(project.fechaEntrega) : undefined;
+      
+      return {
+        id: `task-${index}`,
+        originalId: project.id,
+        name: project.especialidad,
+        empresa: project.empresa,
+        especialidad: project.especialidad,
+        proyectoEstudio: project.proyectoEstudio,
+        estado: project.estado,
+        fechaEntrega: project.fechaEntrega,
+        duration: '1 día',
+        startDate: entregaDate,
+        endDate: entregaDate ? new Date(new Date(entregaDate).setDate(entregaDate.getDate() + 1)) : undefined,
+        progress: 50,
+        subtasks: [],
+        collapsed: false,
+        level: 1
+      };
+    });
+    
+    mainTask.subtasks = subtasks;
+    setTasks([mainTask]);
+    
+  }, [selectedProject, projects]);
   
   // Toggle task collapse/expand
   const toggleTask = (taskId: string) => {
@@ -288,7 +255,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
         <div className={`flex hover:bg-gray-100 border-b border-gray-200 ${!isVisible ? 'hidden' : ''}`}>
           {/* Task info columns */}
           <div className="flex flex-shrink-0 items-center">
-            <div className="w-12 text-center text-gray-500">{task.id.split('-')[1]}</div>
+            <div className="w-12 text-center text-gray-500">{task.originalId || ""}</div>
             <div className="w-8 flex justify-center">
               <button 
                 className="w-6 h-6 flex items-center justify-center rounded-full hover:bg-gray-200" 
@@ -303,12 +270,22 @@ const GanttChart = ({ projects }: GanttChartProps) => {
               </button>
             </div>
             <div 
-              className="p-2 w-[350px] truncate overflow-hidden flex items-center"
+              className="p-2 w-[220px] truncate overflow-hidden flex items-center"
               style={{ paddingLeft: `${task.level * 20 + 8}px` }}
             >
               {task.name}
             </div>
-            <div className="p-2 w-[100px] text-center border-l border-gray-200">{task.duration}</div>
+            {task.level > 0 && (
+              <>
+                <div className="p-2 w-[120px] truncate overflow-hidden">{task.empresa || ""}</div>
+                <div className="p-2 w-[120px] truncate overflow-hidden">{task.especialidad || ""}</div>
+                <div className="p-2 w-[120px] truncate overflow-hidden">{task.proyectoEstudio || ""}</div>
+                <div className="p-2 w-[100px] text-center">
+                  {task.estado && <StatusBadge status={task.estado} />}
+                </div>
+                <div className="p-2 w-[100px] text-center">{task.fechaEntrega || ""}</div>
+              </>
+            )}
           </div>
           
           {/* Timeline for this task */}
@@ -317,8 +294,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
               {task.startDate && task.endDate && (
                 <div 
                   className={`absolute top-[8px] h-5 rounded-sm ${
-                    task.level === 0 ? 'bg-blue-500' : 
-                    task.level === 1 ? 'bg-blue-400' : 'bg-blue-300'
+                    task.level === 0 ? 'bg-blue-500' : 'bg-cyan-400'
                   }`}
                   style={{
                     ...taskStyle,
@@ -357,8 +333,8 @@ const GanttChart = ({ projects }: GanttChartProps) => {
                 
                 if (dependentTask?.endDate && task.startDate) {
                   const fromPos = getTaskPosition(dependentTask.startDate, dependentTask.endDate);
-                  const fromRight = parseInt(fromPos.left) + parseInt(fromPos.width);
-                  const toLeft = parseInt(taskStyle.left);
+                  const fromRight = parseInt(fromPos.left || "0") + parseInt(fromPos.width || "0");
+                  const toLeft = parseInt(taskStyle.left || "0");
                   
                   return (
                     <svg
@@ -392,10 +368,30 @@ const GanttChart = ({ projects }: GanttChartProps) => {
   
   return (
     <div className="border border-gray-300 rounded-lg shadow-xl animate-fade-in">
+      {/* Project selector */}
+      <div className="bg-gray-50 p-3 border-b border-gray-300">
+        <div className="flex items-center gap-4">
+          <div className="font-medium text-gray-700">Seleccionar proyecto:</div>
+          <div className="flex flex-wrap gap-2">
+            {uniqueProjects.map(project => (
+              <Button
+                key={project}
+                variant={selectedProject === project ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedProject(project)}
+                className="text-xs"
+              >
+                {project}
+              </Button>
+            ))}
+          </div>
+        </div>
+      </div>
+      
       {/* Toolbar */}
       <div className="bg-gray-100 p-2 flex justify-between items-center border-b border-gray-300">
         <div className="flex items-center space-x-4">
-          <span className="font-semibold text-gray-700">Administración de proyectos</span>
+          <span className="font-semibold text-gray-700">Carta Gantt: {selectedProject}</span>
           <span className="text-sm text-gray-500">
             {minDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })} - 
             {maxDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}
@@ -446,33 +442,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
             <CalendarRange className="w-4 h-4 mr-1" />
             <span>Ir a la fecha</span>
           </Button>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="text-xs h-8"
-          >
-            <Users className="w-4 h-4 mr-1" />
-            <span>Miembros del grupo</span>
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="sm"
-            className="text-xs h-8"
-          >
-            <Target className="w-4 h-4 mr-1" />
-            <span>Objetivos</span>
-          </Button>
         </div>
-      </div>
-      
-      {/* Tab Bar */}
-      <div className="bg-white border-b border-gray-300 flex text-sm">
-        <div className="px-4 py-2 font-medium border-b-2 border-blue-500 text-blue-600">Cuadrícula</div>
-        <div className="px-4 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer">Panel</div>
-        <div className="px-4 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer">Escala de tiempo</div>
-        <div className="px-4 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer">Gráficos</div>
-        <div className="px-4 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer">Personas</div>
-        <div className="px-4 py-2 text-gray-600 hover:bg-gray-100 cursor-pointer">Objetivos</div>
       </div>
       
       <div className="relative">
@@ -480,10 +450,14 @@ const GanttChart = ({ projects }: GanttChartProps) => {
           {/* Header with title columns and timeline header */}
           <div className="flex border-b border-gray-300 bg-white sticky top-0 z-10">
             <div className="flex flex-shrink-0 bg-gray-50 border-r border-gray-300">
-              <div className="w-12 py-2 font-medium text-center">#</div>
+              <div className="w-12 py-2 font-medium text-center">ID</div>
               <div className="w-8"></div>
-              <div className="py-2 w-[350px] font-medium border-l border-gray-200">Nombre de tarea</div>
-              <div className="py-2 w-[100px] font-medium text-center border-l border-gray-200">Duración</div>
+              <div className="py-2 w-[220px] font-medium">Nombre de Tarea</div>
+              <div className="py-2 w-[120px] font-medium">Empresa</div>
+              <div className="py-2 w-[120px] font-medium">Especialidad</div>
+              <div className="py-2 w-[120px] font-medium">Proyecto/Estudio</div>
+              <div className="py-2 w-[100px] font-medium text-center">Estado</div>
+              <div className="py-2 w-[100px] font-medium text-center">Fecha Entrega</div>
             </div>
             
             {/* Timeline header */}
@@ -548,7 +522,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
             <div 
               className="absolute top-0 bottom-0 w-[1px] bg-red-500 z-5 pointer-events-none"
               style={{ 
-                left: `${(todayPosition * 40 * zoom) / 100 + 470}px`,
+                left: `${(todayPosition * 40 * zoom) / 100 + 800}px`,
                 height: `${(tasks.length * 38) + 100}px`
               }}
             ></div>
@@ -559,7 +533,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
             {tasks.map(task => renderTaskRow(task))}
             
             {/* Timeline grid background */}
-            <div className="absolute top-0 left-[470px] right-0 bottom-0 pointer-events-none">
+            <div className="absolute top-0 left-[800px] right-0 bottom-0 pointer-events-none">
               <div className="h-full flex">
                 {timelineDates.map((date, index) => {
                   const cellWidth = (40 * zoom) / 100;

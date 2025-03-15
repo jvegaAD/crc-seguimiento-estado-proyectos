@@ -1,20 +1,16 @@
 
 import { useEffect, useState } from 'react';
 import Header from '../components/Header';
-import StatusFilter from '../components/StatusFilter';
 import GanttChart from '../components/GanttChart';
 import NavigationMenu from '../components/NavigationMenu';
 import { ProjectData } from '@/types/project';
 import { fetchProjects } from '@/services/projectService';
 import { useToast } from '@/hooks/use-toast';
-import { Database, FilterIcon } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { Database } from 'lucide-react';
 
 const GanttPage = () => {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<ProjectData[]>([]);
-  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
-  const [filterVisible, setFilterVisible] = useState(false);
   const { toast } = useToast();
   
   // Use the current date for the report
@@ -40,15 +36,6 @@ const GanttPage = () => {
     
     loadProjects();
   }, [toast]);
-  
-  // Filter projects by status if any statuses are selected
-  const filteredProjects = selectedStatuses.length > 0
-    ? projects.filter(project => selectedStatuses.includes(project.estado))
-    : projects;
-
-  const handleStatusFilterChange = (statuses: string[]) => {
-    setSelectedStatuses(statuses);
-  };
 
   if (loading) {
     return (
@@ -66,32 +53,14 @@ const GanttPage = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      <Header title="Administración de proyectos" subtitle={`17 mar - 10 jul`} date={reportDate} />
+      <Header title="Carta Gantt de Proyectos" subtitle="Visualización de cronograma" date={reportDate} />
       <NavigationMenu />
       
       <div className="page-scroll-container">
         <div className="min-w-[1000px]">
-          <div className="px-4 mt-4">
-            <div className="flex justify-between items-center mb-4">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex items-center gap-1"
-                onClick={() => setFilterVisible(!filterVisible)}
-              >
-                <FilterIcon className="w-4 h-4" />
-                <span>Filtros ({selectedStatuses.length || 0})</span>
-              </Button>
-            </div>
-            
-            {filterVisible && (
-              <div className="mb-4">
-                <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
-              </div>
-            )}
-            
+          <div className="px-4 mt-4">            
             <div className="mt-4">
-              <GanttChart projects={filteredProjects} />
+              <GanttChart projects={projects} />
             </div>
           </div>
         </div>
