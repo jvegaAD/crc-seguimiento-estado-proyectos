@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { ProjectData } from '@/types/project';
 import StatusBadge from './table/StatusBadge';
 import { Button } from '@/components/ui/button';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { 
   ChevronDown, 
   ChevronRight, 
@@ -60,19 +61,22 @@ const GanttChart = ({ projects }: GanttChartProps) => {
         setSelectedProject(projectNames[0]);
       }
       
-      // Find min and max dates for the timeline
-      const allDates = projects.map(p => p.fechaEntrega ? new Date(p.fechaEntrega) : null).filter(Boolean) as Date[];
-      
-      if (allDates.length > 0) {
-        const min = new Date(Math.min(...allDates.map(d => d.getTime())));
-        const max = new Date(Math.max(...allDates.map(d => d.getTime())));
+      // For the selected project, find min and max dates for the timeline
+      if (selectedProject) {
+        const projectData = projects.filter(p => p.nombreProyecto === selectedProject);
+        const projectDates = projectData.map(p => p.fechaEntrega ? new Date(p.fechaEntrega) : null).filter(Boolean) as Date[];
         
-        // Add buffer days before and after
-        min.setDate(min.getDate() - 5);
-        max.setDate(max.getDate() + 5);
-        
-        setMinDate(min);
-        setMaxDate(max);
+        if (projectDates.length > 0) {
+          const min = new Date(Math.min(...projectDates.map(d => d.getTime())));
+          const max = new Date(Math.max(...projectDates.map(d => d.getTime())));
+          
+          // Add buffer days before and after
+          min.setDate(min.getDate() - 5);
+          max.setDate(max.getDate() + 5);
+          
+          setMinDate(min);
+          setMaxDate(max);
+        }
       }
     }
   }, [projects, selectedProject]);
@@ -102,13 +106,13 @@ const GanttChart = ({ projects }: GanttChartProps) => {
       
       return {
         id: `task-${index}`,
-        originalId: project.id,
-        name: project.especialidad,
-        empresa: project.empresa,
-        especialidad: project.especialidad,
-        proyectoEstudio: project.proyectoEstudio,
-        estado: project.estado,
-        fechaEntrega: project.fechaEntrega,
+        originalId: project.id ? project.id.toString() : undefined,
+        name: project.especialidad || "",
+        empresa: project.empresa || "",
+        especialidad: project.especialidad || "",
+        proyectoEstudio: project.proyectoEstudio || "",
+        estado: project.estado || "",
+        fechaEntrega: project.fechaEntrega || "",
         duration: '1 día',
         startDate: entregaDate,
         endDate: entregaDate ? new Date(new Date(entregaDate).setDate(entregaDate.getDate() + 1)) : undefined,
@@ -251,7 +255,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
     const isCollapsible = task.subtasks.length > 0;
     
     return (
-      <>
+      <React.Fragment key={task.id}>
         <div className={`flex hover:bg-gray-100 border-b border-gray-200 ${!isVisible ? 'hidden' : ''}`}>
           {/* Task info columns */}
           <div className="flex flex-shrink-0 items-center">
@@ -333,8 +337,8 @@ const GanttChart = ({ projects }: GanttChartProps) => {
                 
                 if (dependentTask?.endDate && task.startDate) {
                   const fromPos = getTaskPosition(dependentTask.startDate, dependentTask.endDate);
-                  const fromRight = parseInt(fromPos.left || "0") + parseInt(fromPos.width || "0");
-                  const toLeft = parseInt(taskStyle.left || "0");
+                  const fromRight = parseInt(fromPos.left) + parseInt(fromPos.width);
+                  const toLeft = parseInt(taskStyle.left);
                   
                   return (
                     <svg
@@ -362,12 +366,12 @@ const GanttChart = ({ projects }: GanttChartProps) => {
         
         {/* Render subtasks recursively */}
         {!task.collapsed && task.subtasks.map(subtask => renderTaskRow(subtask, isVisible))}
-      </>
+      </React.Fragment>
     );
   };
   
   return (
-    <div className="border border-gray-300 rounded-lg shadow-xl animate-fade-in">
+    <div className="border border-gray-300 rounded-lg shadow-xl animate-fade-in flex flex-col">
       {/* Project selector */}
       <div className="bg-gray-50 p-3 border-b border-gray-300">
         <div className="flex items-center gap-4">
@@ -445,112 +449,133 @@ const GanttChart = ({ projects }: GanttChartProps) => {
         </div>
       </div>
       
-      <div className="relative">
-        <div className="min-w-[1200px] overflow-x-auto" ref={scrollContainerRef}>
-          {/* Header with title columns and timeline header */}
-          <div className="flex border-b border-gray-300 bg-white sticky top-0 z-10">
-            <div className="flex flex-shrink-0 bg-gray-50 border-r border-gray-300">
-              <div className="w-12 py-2 font-medium text-center">ID</div>
-              <div className="w-8"></div>
-              <div className="py-2 w-[220px] font-medium">Nombre de Tarea</div>
-              <div className="py-2 w-[120px] font-medium">Empresa</div>
-              <div className="py-2 w-[120px] font-medium">Especialidad</div>
-              <div className="py-2 w-[120px] font-medium">Proyecto/Estudio</div>
-              <div className="py-2 w-[100px] font-medium text-center">Estado</div>
-              <div className="py-2 w-[100px] font-medium text-center">Fecha Entrega</div>
+      <div className="relative flex-grow flex flex-col">
+        {/* Fixed top header with columns */}
+        <div className="flex border-b border-gray-300 bg-white sticky top-0 z-10">
+          <div className="flex flex-shrink-0 bg-gray-50 border-r border-gray-300">
+            <div className="w-12 py-2 font-medium text-center">ID</div>
+            <div className="w-8"></div>
+            <div className="py-2 w-[220px] font-medium">Nombre de Tarea</div>
+            <div className="py-2 w-[120px] font-medium">Empresa</div>
+            <div className="py-2 w-[120px] font-medium">Especialidad</div>
+            <div className="py-2 w-[120px] font-medium">Proyecto/Estudio</div>
+            <div className="py-2 w-[100px] font-medium text-center">Estado</div>
+            <div className="py-2 w-[100px] font-medium text-center">Fecha Entrega</div>
+          </div>
+          
+          {/* Timeline header */}
+          <div className="bg-white flex-1">
+            <div className="flex" style={{ height: '24px' }}>
+              {/* Monthly headers */}
+              {timelineDates.filter((_, i) => i === 0 || timelineDates[i-1].getMonth() !== timelineDates[i].getMonth()).map((date, i, filteredDates) => {
+                const nextMonthIndex = i + 1 < filteredDates.length 
+                  ? timelineDates.findIndex(d => 
+                      d.getMonth() === filteredDates[i+1].getMonth() && 
+                      d.getFullYear() === filteredDates[i+1].getFullYear()) 
+                  : timelineDates.length;
+                const currentMonthIndex = timelineDates.findIndex(d => 
+                  d.getMonth() === date.getMonth() && 
+                  d.getFullYear() === date.getFullYear());
+                const width = ((nextMonthIndex - currentMonthIndex) * 40 * zoom) / 100;
+                
+                return (
+                  <div 
+                    key={`month-${i}`} 
+                    className="border-r border-gray-300 text-xs font-medium flex items-center justify-center bg-gray-50 text-gray-700"
+                    style={{ 
+                      width: `${width}px`,
+                      minWidth: `${width}px`
+                    }}
+                  >
+                    {formatMonthYear(date)}
+                  </div>
+                );
+              })}
             </div>
             
-            {/* Timeline header */}
-            <div className="bg-white flex-1">
-              <div className="flex" style={{ height: '24px' }}>
-                {/* Monthly headers */}
-                {timelineDates.filter((_, i) => i === 0 || timelineDates[i-1].getMonth() !== timelineDates[i].getMonth()).map((date, i, filteredDates) => {
-                  const nextMonthIndex = i + 1 < filteredDates.length 
-                    ? timelineDates.findIndex(d => 
-                        d.getMonth() === filteredDates[i+1].getMonth() && 
-                        d.getFullYear() === filteredDates[i+1].getFullYear()) 
-                    : timelineDates.length;
-                  const currentMonthIndex = timelineDates.findIndex(d => 
-                    d.getMonth() === date.getMonth() && 
-                    d.getFullYear() === date.getFullYear());
-                  const width = ((nextMonthIndex - currentMonthIndex) * 40 * zoom) / 100;
-                  
-                  return (
-                    <div 
-                      key={`month-${i}`} 
-                      className="border-r border-gray-300 text-xs font-medium flex items-center justify-center bg-gray-50 text-gray-700"
-                      style={{ 
-                        width: `${width}px`,
-                        minWidth: `${width}px`
-                      }}
-                    >
-                      {formatMonthYear(date)}
-                    </div>
-                  );
-                })}
-              </div>
+            <div className="flex">
+              {/* Daily headers */}
+              {timelineDates.map((date, index) => {
+                const cellWidth = (40 * zoom) / 100;
+                const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                const isToday = new Date().toDateString() === date.toDateString();
+                
+                return (
+                  <div 
+                    key={`day-${index}`} 
+                    className={`flex-shrink-0 border-r border-gray-200 text-center text-xs py-1
+                      ${isWeekend ? 'bg-gray-50' : ''}
+                      ${isToday ? 'bg-blue-50 font-medium' : ''}
+                    `}
+                    style={{ 
+                      width: `${cellWidth}px`, 
+                      minWidth: `${cellWidth}px` 
+                    }}
+                  >
+                    <div>{date.getDate()}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+        
+        {/* Scrollable content area */}
+        <ScrollArea className="flex-grow" orientation="both">
+          <div className="relative" style={{ 
+            width: `${800 + timelineDates.length * ((40 * zoom) / 100)}px`,
+            minHeight: `${Math.max(400, tasks.reduce((height, task) => height + (1 + task.subtasks.length) * 38, 0))}px`
+          }}>
+            {/* Timeline today guideline */}
+            {showGuideline && (
+              <div 
+                className="absolute top-0 bottom-0 w-[1px] bg-red-500 z-5 pointer-events-none"
+                style={{ 
+                  left: `${(todayPosition * 40 * zoom) / 100 + 800}px`
+                }}
+              ></div>
+            )}
+            
+            {/* Tasks with timeline */}
+            <div className="relative">
+              {tasks.map(task => renderTaskRow(task))}
               
-              <div className="flex">
-                {/* Daily headers */}
-                {timelineDates.map((date, index) => {
-                  const cellWidth = (40 * zoom) / 100;
-                  const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                  const isToday = new Date().toDateString() === date.toDateString();
-                  
-                  return (
-                    <div 
-                      key={index} 
-                      className={`flex-shrink-0 border-r border-gray-200 text-center text-xs py-1
-                        ${isWeekend ? 'bg-gray-50' : ''}
-                        ${isToday ? 'bg-blue-50 font-medium' : ''}
-                      `}
-                      style={{ 
-                        width: `${cellWidth}px`, 
-                        minWidth: `${cellWidth}px` 
-                      }}
-                    >
-                      <div>{date.getDate()}</div>
-                    </div>
-                  );
-                })}
+              {/* Timeline grid background */}
+              <div className="absolute top-0 left-[800px] right-0 bottom-0 pointer-events-none">
+                <div className="h-full flex">
+                  {timelineDates.map((date, index) => {
+                    const cellWidth = (40 * zoom) / 100;
+                    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                    
+                    return (
+                      <div 
+                        key={`grid-${index}`} 
+                        className={`border-r border-gray-100 ${isWeekend ? 'bg-gray-50/30' : ''}`}
+                        style={{ 
+                          width: `${cellWidth}px`,
+                          height: `${tasks.length * 38}px`
+                        }}
+                      ></div>
+                    );
+                  })}
+                </div>
               </div>
             </div>
           </div>
-          
-          {/* Timeline today guideline */}
-          {showGuideline && (
-            <div 
-              className="absolute top-0 bottom-0 w-[1px] bg-red-500 z-5 pointer-events-none"
-              style={{ 
-                left: `${(todayPosition * 40 * zoom) / 100 + 800}px`,
-                height: `${(tasks.length * 38) + 100}px`
-              }}
-            ></div>
-          )}
-          
-          {/* Tasks with timeline */}
-          <div className="relative">
-            {tasks.map(task => renderTaskRow(task))}
-            
-            {/* Timeline grid background */}
-            <div className="absolute top-0 left-[800px] right-0 bottom-0 pointer-events-none">
-              <div className="h-full flex">
-                {timelineDates.map((date, index) => {
-                  const cellWidth = (40 * zoom) / 100;
-                  const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                  
-                  return (
-                    <div 
-                      key={index} 
-                      className={`border-r border-gray-100 ${isWeekend ? 'bg-gray-50/30' : ''}`}
-                      style={{ 
-                        width: `${cellWidth}px`,
-                        height: `${tasks.length * 38}px`
-                      }}
-                    ></div>
-                  );
-                })}
-              </div>
+        </ScrollArea>
+        
+        {/* Fixed scrollbar at bottom */}
+        <div className="h-12 border-t border-gray-200 bg-gray-50 flex items-center px-4">
+          <div className="w-full relative h-4 bg-gray-200 rounded">
+            <div className="absolute top-0 left-0 h-full bg-blue-400 rounded"
+                style={{ width: `100%` }}></div>
+            <div className="absolute top-0 left-0 right-0 flex justify-between px-1">
+              <span className="text-xs text-gray-700 font-medium">
+                {minDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
+              </span>
+              <span className="text-xs text-gray-700 font-medium">
+                {maxDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
+              </span>
             </div>
           </div>
         </div>
