@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { ProjectData } from '@/types/project';
 import StatusBadge from './table/StatusBadge';
@@ -519,62 +520,95 @@ const GanttChart = ({ projects }: GanttChartProps) => {
           </div>
         </div>
         
-        {/* Scrollable content area */}
-        <ScrollArea className="flex-grow overflow-auto" ref={scrollContainerRef}>
-          <div className="relative" style={{ 
-            width: `${800 + timelineDates.length * ((40 * zoom) / 100)}px`,
-            minHeight: `${Math.max(400, tasks.reduce((height, task) => height + (1 + task.subtasks.length) * 38, 0))}px`
-          }}>
-            {/* Timeline today guideline */}
-            {showGuideline && (
-              <div 
-                className="absolute top-0 bottom-0 w-[1px] bg-red-500 z-5 pointer-events-none"
-                style={{ 
-                  left: `${(todayPosition * 40 * zoom) / 100 + 800}px`
-                }}
-              ></div>
-            )}
-            
-            {/* Tasks with timeline */}
-            <div className="relative">
-              {tasks.map(task => renderTaskRow(task))}
+        {/* Main content area with both vertical and horizontal scrolling */}
+        <div className="flex-grow overflow-hidden flex flex-col">
+          <ScrollArea className="flex-grow overflow-auto" ref={scrollContainerRef}>
+            <div className="relative" style={{ 
+              width: `${800 + timelineDates.length * ((40 * zoom) / 100)}px`,
+              minHeight: `${Math.max(400, tasks.reduce((height, task) => height + (1 + task.subtasks.length) * 38, 0))}px`
+            }}>
+              {/* Timeline today guideline */}
+              {showGuideline && (
+                <div 
+                  className="absolute top-0 bottom-0 w-[1px] bg-red-500 z-5 pointer-events-none"
+                  style={{ 
+                    left: `${(todayPosition * 40 * zoom) / 100 + 800}px`
+                  }}
+                ></div>
+              )}
               
-              {/* Timeline grid background */}
-              <div className="absolute top-0 left-[800px] right-0 bottom-0 pointer-events-none">
-                <div className="h-full flex">
-                  {timelineDates.map((date, index) => {
-                    const cellWidth = (40 * zoom) / 100;
-                    const isWeekend = date.getDay() === 0 || date.getDay() === 6;
-                    
-                    return (
-                      <div 
-                        key={`grid-${index}`} 
-                        className={`border-r border-gray-100 ${isWeekend ? 'bg-gray-50/30' : ''}`}
-                        style={{ 
-                          width: `${cellWidth}px`,
-                          height: `${tasks.length * 38}px`
-                        }}
-                      ></div>
-                    );
-                  })}
+              {/* Tasks with timeline */}
+              <div className="relative">
+                {tasks.map(task => renderTaskRow(task))}
+                
+                {/* Timeline grid background */}
+                <div className="absolute top-0 left-[800px] right-0 bottom-0 pointer-events-none">
+                  <div className="h-full flex">
+                    {timelineDates.map((date, index) => {
+                      const cellWidth = (40 * zoom) / 100;
+                      const isWeekend = date.getDay() === 0 || date.getDay() === 6;
+                      
+                      return (
+                        <div 
+                          key={`grid-${index}`} 
+                          className={`border-r border-gray-100 ${isWeekend ? 'bg-gray-50/30' : ''}`}
+                          style={{ 
+                            width: `${cellWidth}px`,
+                            height: `${tasks.length * 38}px`
+                          }}
+                        ></div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </ScrollArea>
-        
-        {/* Fixed scrollbar at bottom - Now with improved visibility */}
-        <div className="h-12 border-t border-gray-200 bg-gray-50 flex items-center px-4 sticky bottom-0 left-0 right-0 shadow-md">
-          <div className="w-full relative h-4 bg-gray-200 rounded">
-            <div className="absolute top-0 left-0 h-full bg-blue-400 rounded"
-                style={{ width: `100%` }}></div>
-            <div className="absolute top-0 left-0 right-0 flex justify-between px-1">
-              <span className="text-xs text-gray-700 font-medium">
-                {minDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
-              </span>
-              <span className="text-xs text-gray-700 font-medium">
-                {maxDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'short', year: 'numeric' })}
-              </span>
+          </ScrollArea>
+        </div>
+
+        {/* Fixed scrollbar at bottom for horizontal navigation - Always visible */}
+        <div className="sticky bottom-0 left-0 right-0 h-14 border-t border-gray-300 bg-gray-100 shadow-md z-10">
+          <div className="w-full h-full overflow-x-auto gantt-scroll-container px-2 py-3" 
+               onScroll={(e) => {
+                 if (scrollContainerRef.current) {
+                   scrollContainerRef.current.scrollLeft = e.currentTarget.scrollLeft;
+                 }
+               }}>
+            <div className="relative" style={{ 
+              width: `${timelineDates.length * ((40 * zoom) / 100)}px`,
+              height: '8px'
+            }}>
+              <div className="absolute inset-0 bg-gray-200 rounded-full">
+                <div className="absolute top-0 left-0 h-full bg-blue-500 rounded-full" 
+                     style={{ width: '100%' }}>
+                </div>
+              </div>
+              
+              {/* Date markers on scrollbar */}
+              {timelineDates.filter((_, i) => i === 0 || i === Math.floor(timelineDates.length / 4) || 
+                                             i === Math.floor(timelineDates.length / 2) || 
+                                             i === Math.floor(3 * timelineDates.length / 4) || 
+                                             i === timelineDates.length - 1).map((date, i) => {
+                const position = (i * (timelineDates.length * ((40 * zoom) / 100))) / 4;
+                return (
+                  <div key={`marker-${i}`} 
+                       className="absolute bottom-full mb-1 transform -translate-x-1/2 text-xs font-medium text-gray-700"
+                       style={{ left: `${position}px` }}>
+                    {date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}
+                  </div>
+                );
+              })}
+              
+              {/* Today marker */}
+              <div className="absolute top-0 bottom-0 w-[3px] bg-red-500 rounded-full"
+                   style={{ 
+                     left: `${todayPosition * ((40 * zoom) / 100)}px`,
+                     transform: 'translateX(-50%)'
+                   }}>
+                <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-xs font-bold text-red-500">
+                  Hoy
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -584,3 +618,4 @@ const GanttChart = ({ projects }: GanttChartProps) => {
 };
 
 export default GanttChart;
+
