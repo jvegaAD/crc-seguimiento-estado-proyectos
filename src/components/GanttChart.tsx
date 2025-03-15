@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { ProjectData } from '@/types/project';
 import StatusBadge from './table/StatusBadge';
@@ -594,7 +593,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
                   <div key={`marker-${i}`} 
                        className="absolute bottom-full mb-1 transform -translate-x-1/2 text-xs font-medium text-gray-700"
                        style={{ left: `${position}px` }}>
-                    {date.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' })}
+                    {formatShortDate(date)}
                   </div>
                 );
               })}
@@ -618,4 +617,3 @@ const GanttChart = ({ projects }: GanttChartProps) => {
 };
 
 export default GanttChart;
-
