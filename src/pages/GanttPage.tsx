@@ -7,12 +7,14 @@ import NavigationMenu from '../components/NavigationMenu';
 import { ProjectData } from '@/types/project';
 import { fetchProjects } from '@/services/projectService';
 import { useToast } from '@/hooks/use-toast';
-import { Database } from 'lucide-react';
+import { Database, FilterIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const GanttPage = () => {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<ProjectData[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [filterVisible, setFilterVisible] = useState(false);
   const { toast } = useToast();
   
   // Use the current date for the report
@@ -64,15 +66,31 @@ const GanttPage = () => {
 
   return (
     <div className="min-h-screen pb-20">
-      <Header title="Carta Gantt" subtitle={`Fecha del informe: ${reportDate}`} date={reportDate} />
+      <Header title="Administración de proyectos" subtitle={`17 mar - 10 jul`} date={reportDate} />
       <NavigationMenu />
       
       <div className="page-scroll-container">
-        <div className="min-w-[1400px]">
-          <div className="px-4 mt-12">
-            <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+        <div className="min-w-[1000px]">
+          <div className="px-4 mt-4">
+            <div className="flex justify-between items-center mb-4">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-1"
+                onClick={() => setFilterVisible(!filterVisible)}
+              >
+                <FilterIcon className="w-4 h-4" />
+                <span>Filtros ({selectedStatuses.length || 0})</span>
+              </Button>
+            </div>
             
-            <div className="mt-8">
+            {filterVisible && (
+              <div className="mb-4">
+                <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+              </div>
+            )}
+            
+            <div className="mt-4">
               <GanttChart projects={filteredProjects} />
             </div>
           </div>
