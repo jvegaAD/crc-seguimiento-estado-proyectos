@@ -255,7 +255,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
     const isCollapsible = task.subtasks.length > 0;
     
     return (
-      <React.Fragment key={task.id}>
+      <div key={task.id}>
         <div className={`flex hover:bg-gray-100 border-b border-gray-200 ${!isVisible ? 'hidden' : ''}`}>
           {/* Task info columns */}
           <div className="flex flex-shrink-0 items-center">
@@ -366,12 +366,12 @@ const GanttChart = ({ projects }: GanttChartProps) => {
         
         {/* Render subtasks recursively */}
         {!task.collapsed && task.subtasks.map(subtask => renderTaskRow(subtask, isVisible))}
-      </React.Fragment>
+      </div>
     );
   };
   
   return (
-    <div className="border border-gray-300 rounded-lg shadow-xl animate-fade-in flex flex-col">
+    <div className="border border-gray-300 rounded-lg shadow-xl animate-fade-in flex flex-col h-full overflow-hidden">
       {/* Project selector */}
       <div className="bg-gray-50 p-3 border-b border-gray-300">
         <div className="flex items-center gap-4">
@@ -449,7 +449,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
         </div>
       </div>
       
-      <div className="relative flex-grow flex flex-col">
+      <div className="relative flex-grow flex flex-col overflow-hidden">
         {/* Fixed top header with columns */}
         <div className="flex border-b border-gray-300 bg-white sticky top-0 z-10">
           <div className="flex flex-shrink-0 bg-gray-50 border-r border-gray-300">
@@ -521,7 +521,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
         </div>
         
         {/* Scrollable content area */}
-        <ScrollArea className="flex-grow" orientation="both">
+        <ScrollArea className="flex-grow overflow-auto" ref={scrollContainerRef}>
           <div className="relative" style={{ 
             width: `${800 + timelineDates.length * ((40 * zoom) / 100)}px`,
             minHeight: `${Math.max(400, tasks.reduce((height, task) => height + (1 + task.subtasks.length) * 38, 0))}px`
@@ -565,7 +565,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
         </ScrollArea>
         
         {/* Fixed scrollbar at bottom */}
-        <div className="h-12 border-t border-gray-200 bg-gray-50 flex items-center px-4">
+        <div className="h-12 border-t border-gray-200 bg-gray-50 flex items-center px-4 sticky bottom-0 left-0 right-0">
           <div className="w-full relative h-4 bg-gray-200 rounded">
             <div className="absolute top-0 left-0 h-full bg-blue-400 rounded"
                 style={{ width: `100%` }}></div>

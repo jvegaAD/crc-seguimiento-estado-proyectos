@@ -7,7 +7,6 @@ import { ProjectData } from '@/types/project';
 import { fetchProjects } from '@/services/projectService';
 import { useToast } from '@/hooks/use-toast';
 import { Database } from 'lucide-react';
-import { ScrollArea } from '@/components/ui/scroll-area';
 
 const GanttPage = () => {
   const [loading, setLoading] = useState(true);
@@ -53,12 +52,14 @@ const GanttPage = () => {
   }
 
   return (
-    <div className="min-h-screen flex flex-col pb-0">
+    <div className="min-h-screen flex flex-col">
       <Header title="Carta Gantt de Proyectos" subtitle="Visualización de cronograma" date={reportDate} />
       <NavigationMenu />
       
-      <div className="flex-grow flex flex-col px-4 pt-4 pb-0">
-        <GanttChart projects={projects} />
+      <div className="flex-grow flex flex-col p-4 pb-0 overflow-hidden">
+        <div className="flex-grow overflow-hidden flex flex-col">
+          <GanttChart projects={projects} />
+        </div>
       </div>
     </div>
   );
