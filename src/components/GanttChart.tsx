@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { ProjectData } from '@/types/project';
 import StatusBadge from './table/StatusBadge';
@@ -564,8 +563,8 @@ const GanttChart = ({ projects }: GanttChartProps) => {
           </div>
         </ScrollArea>
         
-        {/* Fixed scrollbar at bottom */}
-        <div className="h-12 border-t border-gray-200 bg-gray-50 flex items-center px-4 sticky bottom-0 left-0 right-0">
+        {/* Fixed scrollbar at bottom - Now with improved visibility */}
+        <div className="h-12 border-t border-gray-200 bg-gray-50 flex items-center px-4 sticky bottom-0 left-0 right-0 shadow-md">
           <div className="w-full relative h-4 bg-gray-200 rounded">
             <div className="absolute top-0 left-0 h-full bg-blue-400 rounded"
                 style={{ width: `100%` }}></div>
