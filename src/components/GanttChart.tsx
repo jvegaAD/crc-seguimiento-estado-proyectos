@@ -1,3 +1,4 @@
+
 import { useState, useEffect, useRef } from 'react';
 import { ProjectData } from '@/types/project';
 import StatusBadge from './table/StatusBadge';
@@ -592,7 +593,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
                 return (
                   <div key={`marker-${i}`} 
                        className="absolute bottom-full mb-1 transform -translate-x-1/2 text-xs font-medium text-gray-700"
-                       style={{ left: `${position}px` }}>
+                       style={{ left: `${position.toString()}px` }}>
                     {formatShortDate(date)}
                   </div>
                 );
@@ -601,7 +602,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
               {/* Today marker */}
               <div className="absolute top-0 bottom-0 w-[3px] bg-red-500 rounded-full"
                    style={{ 
-                     left: `${todayPosition * ((40 * zoom) / 100)}px`,
+                     left: `${(todayPosition * ((40 * zoom) / 100)).toString()}px`,
                      transform: 'translateX(-50%)'
                    }}>
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 text-xs font-bold text-red-500">
