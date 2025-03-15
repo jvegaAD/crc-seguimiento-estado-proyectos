@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 import { ProjectData } from '@/types/project';
 import StatusBadge from './table/StatusBadge';
