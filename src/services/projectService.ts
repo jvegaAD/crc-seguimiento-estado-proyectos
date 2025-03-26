@@ -24,6 +24,7 @@ export async function fetchProjects(): Promise<ProjectData[]> {
       proyectoEstudio: item.proyecto_estudio || ''
     }));
     
+    console.log('Mapped data from Supabase:', mappedData);
     return mappedData;
   } catch (error) {
     console.error('Failed to fetch projects', error);

@@ -21,7 +21,13 @@ const GanttPage = () => {
       try {
         setLoading(true);
         const data = await fetchProjects();
-        setProjects(data);
+        // Ensure all required data is correctly formatted for GanttChart
+        const formattedData = data.map(project => ({
+          ...project,
+          // Convert numeric fields to strings if needed
+          id: String(project.id)
+        }));
+        setProjects(formattedData);
       } catch (error) {
         console.error('Error loading projects:', error);
         toast({

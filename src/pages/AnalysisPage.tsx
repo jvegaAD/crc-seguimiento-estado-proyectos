@@ -24,7 +24,12 @@ const AnalysisPage = () => {
       try {
         setLoading(true);
         const data = await fetchProjects();
-        setProjects(data);
+        // Make sure IDs are strings to avoid type issues
+        const formattedData = data.map(project => ({
+          ...project,
+          id: String(project.id)
+        }));
+        setProjects(formattedData);
       } catch (error) {
         console.error('Error loading projects:', error);
         toast({
