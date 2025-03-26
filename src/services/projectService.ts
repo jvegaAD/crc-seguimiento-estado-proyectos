@@ -5,7 +5,7 @@ import { ProjectData } from "@/types/project";
 export async function fetchProjects(): Promise<ProjectData[]> {
   try {
     const { data, error } = await supabase
-      .from('proyectos')
+      .from('seguimiento_proyectos')
       .select('*');
     
     if (error) {
@@ -17,7 +17,7 @@ export async function fetchProjects(): Promise<ProjectData[]> {
     const mappedData: ProjectData[] = data.map(item => ({
       empresa: item.empresa || '',
       nombreProyecto: item.nombre_proyecto || '',
-      fechaEntrega: item.fecha_entrega_proyectada || '',
+      fechaEntrega: item.fecha_proxima_entrega || '',
       id: String(item.id),
       estado: item.estado || '',
       especialidad: item.especialidad || '',
