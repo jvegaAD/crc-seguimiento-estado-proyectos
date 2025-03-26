@@ -9,6 +9,7 @@ import { ProjectData } from '@/types/project';
 import { fetchProjects } from '@/services/projectService';
 import { useToast } from '@/hooks/use-toast';
 import { Database, Check } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 const AnalysisPage = () => {
   const [loading, setLoading] = useState(true);
@@ -73,6 +74,30 @@ const AnalysisPage = () => {
     
     setSelectedCompanies(newSelectedCompanies);
   };
+  
+  const selectAllCompanies = () => {
+    setSelectedCompanies([...uniqueCompanies]);
+  };
+  
+  const deselectAllCompanies = () => {
+    setSelectedCompanies([]);
+  };
+  
+  // Company button colors
+  const getCompanyColor = (company: string) => {
+    const colors = [
+      '#FFB6C1', // Light Pink
+      '#87CEFA', // Light Sky Blue
+      '#98FB98', // Pale Green
+      '#FFA07A', // Light Salmon
+      '#DDA0DD', // Plum
+      '#FFDAB9', // Peach Puff
+      '#B0E0E6', // Powder Blue
+      '#FFFACD', // Lemon Chiffon
+    ];
+    const index = company.charCodeAt(0) % colors.length;
+    return colors[index];
+  };
 
   if (loading) {
     return (
@@ -94,18 +119,43 @@ const AnalysisPage = () => {
       <NavigationMenu />
       
       <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12">
-        <div className="flex flex-row space-x-4">
-          <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
-          <ProjectNameFilter projects={projects} onFilterChange={handleProjectFilterChange} />
+        <div className="flex flex-row">
+          <div className="w-1/3">
+            <ProjectNameFilter projects={projects} onFilterChange={handleProjectFilterChange} />
+          </div>
+          <div className="w-2/3">
+            <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+          </div>
         </div>
         
         <div className="mb-8 animate-fade-in mt-8">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col items-center">
               <h2 className="text-lg md:text-xl font-semibold mb-3 text-[#040c67]">FILTRO EMPRESA</h2>
+              
+              <div className="flex justify-center gap-2 mb-3">
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={selectAllCompanies}
+                  className="text-xs hover:bg-[#040c67] hover:text-white"
+                >
+                  Seleccionar todos
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={deselectAllCompanies}
+                  className="text-xs hover:bg-[#040c67] hover:text-white"
+                >
+                  Deseleccionar todos
+                </Button>
+              </div>
+              
               <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2">
                 {uniqueCompanies.map(company => {
                   const isSelected = selectedCompanies.includes(company);
+                  const bgColor = getCompanyColor(company);
                   return (
                     <button
                       key={company}
@@ -116,8 +166,12 @@ const AnalysisPage = () => {
                         border ${isSelected ? 'border-transparent' : 'border-gray-300'} 
                         ${isSelected 
                           ? 'bg-[#040c67] text-primary-foreground shadow-md' 
-                          : 'bg-[#F1F0FB] hover:bg-[#E8E7F5] border-gray-300 shadow-sm hover:shadow-md'}
+                          : 'border-gray-300 shadow-sm hover:shadow-md'}
                       `}
+                      style={{
+                        backgroundColor: isSelected ? '#040c67' : bgColor,
+                        color: isSelected ? 'white' : '#333'
+                      }}
                     >
                       <div className="flex items-center gap-1">
                         {isSelected && <Check className="h-3.5 w-3.5" />}

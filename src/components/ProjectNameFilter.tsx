@@ -2,22 +2,27 @@
 import { useState, useEffect, memo } from 'react';
 import { ProjectData } from '@/types/project';
 import { Check } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface ProjectNameFilterProps {
   projects: ProjectData[];
   onFilterChange: (selectedProjects: string[]) => void;
 }
 
-// Pastel colors for project buttons
+// More vibrant pastel colors for project buttons
 const PASTEL_COLORS = [
-  '#F2FCE2', // Soft Green
-  '#FEF7CD', // Soft Yellow
-  '#FEC6A1', // Soft Orange
-  '#E5DEFF', // Soft Purple
-  '#FFDEE2', // Soft Pink
-  '#FDE1D3', // Soft Peach
-  '#D3E4FD', // Soft Blue
-  '#F1F0FB', // Soft Gray
+  '#FFB6C1', // Light Pink
+  '#87CEFA', // Light Sky Blue
+  '#98FB98', // Pale Green
+  '#FFA07A', // Light Salmon
+  '#DDA0DD', // Plum
+  '#FFDAB9', // Peach Puff
+  '#B0E0E6', // Powder Blue
+  '#FFFACD', // Lemon Chiffon
+  '#E6E6FA', // Lavender
+  '#F0E68C', // Khaki
+  '#FFE4B5', // Moccasin
+  '#AFEEEE', // Pale Turquoise
 ];
 
 const ProjectNameFilter = ({ projects, onFilterChange }: ProjectNameFilterProps) => {
@@ -36,6 +41,14 @@ const ProjectNameFilter = ({ projects, onFilterChange }: ProjectNameFilterProps)
     setSelectedProjects(newSelectedProjects);
   };
   
+  const selectAll = () => {
+    setSelectedProjects([...uniqueProjectNames]);
+  };
+  
+  const deselectAll = () => {
+    setSelectedProjects([]);
+  };
+  
   // Update parent component when selection changes
   useEffect(() => {
     onFilterChange(selectedProjects);
@@ -50,11 +63,31 @@ const ProjectNameFilter = ({ projects, onFilterChange }: ProjectNameFilterProps)
   };
 
   return (
-    <div className="mb-8 animate-fade-in w-1/2">
+    <div className="mb-8 animate-fade-in w-full pr-4">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col items-center">
           <h2 className="text-lg md:text-xl font-semibold mb-3 text-[#040c67]">FILTRO PROYECTO</h2>
-          <div className="flex flex-col gap-2 max-h-64 overflow-y-auto pr-2 subtle-scroll">
+          
+          <div className="flex justify-center gap-2 mb-3 w-full">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={selectAll}
+              className="text-xs hover:bg-[#040c67] hover:text-white"
+            >
+              Seleccionar todos
+            </Button>
+            <Button 
+              variant="outline" 
+              size="sm" 
+              onClick={deselectAll}
+              className="text-xs hover:bg-[#040c67] hover:text-white"
+            >
+              Deseleccionar todos
+            </Button>
+          </div>
+          
+          <div className="flex flex-col gap-2 max-h-64 overflow-y-auto pr-2 subtle-scroll w-full">
             {uniqueProjectNames.map(projectName => {
               const isSelected = selectedProjects.includes(projectName);
               const bgColor = getProjectColor(projectName);

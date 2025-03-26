@@ -94,9 +94,13 @@ const ProjectReport = ({
       <Header title={title} subtitle={`Fecha del informe: ${reportDate}`} date={reportDate} />
       
       <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12">
-        <div className="flex flex-row space-x-4">
-          <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
-          <ProjectNameFilter projects={projects} onFilterChange={handleProjectFilterChange} />
+        <div className="flex flex-row">
+          <div className="w-1/3">
+            <ProjectNameFilter projects={projects} onFilterChange={handleProjectFilterChange} />
+          </div>
+          <div className="w-2/3">
+            <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+          </div>
         </div>
         
         <Button onClick={scrollToIndex} className="fixed right-8 bottom-8 z-10 p-3 rounded-full bg-[#040c67] text-primary-foreground shadow-lg hover:bg-[#040c67]/90 transition-all duration-300 group animate-float" aria-label="Scroll to Index" size="icon">
