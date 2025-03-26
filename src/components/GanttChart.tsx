@@ -233,7 +233,7 @@ const GanttChart = ({ projects }: GanttChartProps) => {
   
   // Calculate task position and width on the timeline
   const getTaskPosition = (startDate?: Date, endDate?: Date) => {
-    if (!startDate || !endDate) return { left: 0, width: 0 };
+    if (!startDate || !endDate) return { left: '0px', width: '0px' };
     
     const startDiffDays = Math.max(0, Math.ceil((startDate.getTime() - minDate.getTime()) / (1000 * 60 * 60 * 24)));
     const endDiffDays = Math.max(0, Math.ceil((endDate.getTime() - minDate.getTime()) / (1000 * 60 * 60 * 24)));
@@ -243,8 +243,8 @@ const GanttChart = ({ projects }: GanttChartProps) => {
     const width = Math.max(cellWidth, (endDiffDays - startDiffDays) * cellWidth);
     
     return {
-      left: `${left}px`,
-      width: `${width}px`,
+      left: `${left.toString()}px`, // Explicitly convert to string
+      width: `${width.toString()}px`, // Explicitly convert to string
     };
   };
   
