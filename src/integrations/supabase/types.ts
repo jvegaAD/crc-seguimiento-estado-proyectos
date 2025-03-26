@@ -9,33 +9,75 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      proyectos: {
+      seguimiento_proyectos: {
         Row: {
+          categoria: string | null
+          correo: string | null
+          desarrolla: string | null
+          dias_desarrollo: number | null
+          diferencia_dias: number | null
           empresa: string | null
           especialidad: string | null
           estado: string | null
-          fecha_entrega_proyectada: string | null
+          etapa_proyecto: string | null
+          fecha_inicio: string | null
+          fecha_proxima_entrega: string | null
+          fecha_termino: string | null
           id: number
           nombre_proyecto: string | null
+          observacion: string | null
           proyecto_estudio: string | null
+          responsable_observacion: string | null
+          tarea: string | null
+          tarea_hoy: string | null
+          telefono: string | null
+          tipo: string | null
         }
         Insert: {
+          categoria?: string | null
+          correo?: string | null
+          desarrolla?: string | null
+          dias_desarrollo?: number | null
+          diferencia_dias?: number | null
           empresa?: string | null
           especialidad?: string | null
           estado?: string | null
-          fecha_entrega_proyectada?: string | null
+          etapa_proyecto?: string | null
+          fecha_inicio?: string | null
+          fecha_proxima_entrega?: string | null
+          fecha_termino?: string | null
           id?: number
           nombre_proyecto?: string | null
+          observacion?: string | null
           proyecto_estudio?: string | null
+          responsable_observacion?: string | null
+          tarea?: string | null
+          tarea_hoy?: string | null
+          telefono?: string | null
+          tipo?: string | null
         }
         Update: {
+          categoria?: string | null
+          correo?: string | null
+          desarrolla?: string | null
+          dias_desarrollo?: number | null
+          diferencia_dias?: number | null
           empresa?: string | null
           especialidad?: string | null
           estado?: string | null
-          fecha_entrega_proyectada?: string | null
+          etapa_proyecto?: string | null
+          fecha_inicio?: string | null
+          fecha_proxima_entrega?: string | null
+          fecha_termino?: string | null
           id?: number
           nombre_proyecto?: string | null
+          observacion?: string | null
           proyecto_estudio?: string | null
+          responsable_observacion?: string | null
+          tarea?: string | null
+          tarea_hoy?: string | null
+          telefono?: string | null
+          tipo?: string | null
         }
         Relationships: []
       }
