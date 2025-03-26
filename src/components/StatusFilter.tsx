@@ -9,16 +9,20 @@ interface StatusFilterProps {
   onFilterChange: (selectedStatuses: string[]) => void;
 }
 
-// Pastel colors for status buttons
+// Pastel colors for status buttons - more vibrant
 const STATUS_COLORS = [
-  '#FEC6A1', // Soft Orange
-  '#E5DEFF', // Soft Purple
-  '#FFDEE2', // Soft Pink
-  '#FDE1D3', // Soft Peach
-  '#D3E4FD', // Soft Blue
-  '#F2FCE2', // Soft Green
-  '#FEF7CD', // Soft Yellow
-  '#F1F0FB', // Soft Gray
+  '#FFB6C1', // Light Pink
+  '#87CEFA', // Light Sky Blue
+  '#98FB98', // Pale Green
+  '#FFA07A', // Light Salmon
+  '#DDA0DD', // Plum
+  '#FFDAB9', // Peach Puff
+  '#B0E0E6', // Powder Blue
+  '#FFFACD', // Lemon Chiffon
+  '#E6E6FA', // Lavender
+  '#F0E68C', // Khaki
+  '#FFE4B5', // Moccasin
+  '#AFEEEE', // Pale Turquoise
 ];
 
 const StatusFilter = ({ projects, onFilterChange }: StatusFilterProps) => {

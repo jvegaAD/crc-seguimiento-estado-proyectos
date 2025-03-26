@@ -7,6 +7,12 @@ export interface ProjectData {
   estado: string;
   especialidad: string;
   proyectoEstudio: string;
+  // Additional fields from the database
+  fechaInicio?: string;
+  fechaTermino?: string;
+  tarea?: string;
+  categoria?: string;
+  observacion?: string;
 }
 
 export interface SortConfig {
@@ -22,4 +28,9 @@ export interface SupabaseProject {
   estado: string | null;
   especialidad: string | null;
   empresa: string | null;
+  fecha_inicio: string | null;
+  fecha_termino: string | null;
+  tarea: string | null;
+  categoria: string | null;
+  observacion: string | null;
 }

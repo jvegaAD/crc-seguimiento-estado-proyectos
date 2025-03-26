@@ -30,7 +30,11 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
     { key: 'id', label: 'ID' },
     { key: 'estado', label: 'Estado' },
     { key: 'especialidad', label: 'Especialidad' },
-    { key: 'proyectoEstudio', label: 'Proyecto/Estudio' }
+    { key: 'proyectoEstudio', label: 'Proyecto/Estudio' },
+    { key: 'fechaInicio', label: 'Fecha Inicio' },
+    { key: 'fechaTermino', label: 'Fecha Término' },
+    { key: 'tarea', label: 'Tarea' },
+    { key: 'observacion', label: 'Observación' }
   ];
 
   return (
@@ -82,6 +86,10 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
                 </td>
                 <td className="p-2 border border-gray-300">{row.especialidad}</td>
                 <td className="p-2 border border-gray-300">{row.proyectoEstudio}</td>
+                <td className="p-2 border border-gray-300">{row.fechaInicio}</td>
+                <td className="p-2 border border-gray-300">{row.fechaTermino}</td>
+                <td className="p-2 border border-gray-300">{row.tarea}</td>
+                <td className="p-2 border border-gray-300">{row.observacion}</td>
               </tr>
             ))
           )}

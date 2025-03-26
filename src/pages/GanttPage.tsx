@@ -7,10 +7,15 @@ import { ProjectData } from '@/types/project';
 import { fetchProjects } from '@/services/projectService';
 import { useToast } from '@/hooks/use-toast';
 import { Database } from 'lucide-react';
+import StatusFilter from '../components/StatusFilter';
+import ProjectNameFilter from '../components/ProjectNameFilter';
 
 const GanttPage = () => {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<ProjectData[]>([]);
+  const [filteredProjects, setFilteredProjects] = useState<ProjectData[]>([]);
+  const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
   const { toast } = useToast();
   
   // Use the current date for the report
@@ -28,6 +33,7 @@ const GanttPage = () => {
           id: String(project.id)
         }));
         setProjects(formattedData);
+        setFilteredProjects(formattedData);
       } catch (error) {
         console.error('Error loading projects:', error);
         toast({
@@ -42,6 +48,33 @@ const GanttPage = () => {
     
     loadProjects();
   }, [toast]);
+
+  // Filter projects when status or project name filters change
+  useEffect(() => {
+    let filtered = [...projects];
+    
+    if (selectedStatuses.length > 0) {
+      filtered = filtered.filter(project => 
+        selectedStatuses.includes(project.estado)
+      );
+    }
+    
+    if (selectedProjects.length > 0) {
+      filtered = filtered.filter(project => 
+        selectedProjects.includes(project.nombreProyecto)
+      );
+    }
+    
+    setFilteredProjects(filtered);
+  }, [selectedStatuses, selectedProjects, projects]);
+
+  const handleStatusFilterChange = (statuses: string[]) => {
+    setSelectedStatuses(statuses);
+  };
+
+  const handleProjectFilterChange = (projectNames: string[]) => {
+    setSelectedProjects(projectNames);
+  };
 
   if (loading) {
     return (
@@ -62,9 +95,20 @@ const GanttPage = () => {
       <Header title="Carta Gantt de Proyectos" subtitle="Visualización de cronograma" date={reportDate} />
       <NavigationMenu />
       
+      <div className="max-w-7xl mx-auto px-4 md:px-8 mt-6">
+        <div className="flex flex-row mb-4">
+          <div className="w-1/3">
+            <ProjectNameFilter projects={projects} onFilterChange={handleProjectFilterChange} />
+          </div>
+          <div className="w-2/3">
+            <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+          </div>
+        </div>
+      </div>
+      
       <div className="flex-grow flex flex-col p-4 pb-0 overflow-hidden">
         <div className="flex-grow overflow-hidden flex flex-col">
-          <GanttChart projects={projects} />
+          <GanttChart projects={filteredProjects} />
         </div>
       </div>
     </div>
