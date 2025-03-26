@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import StatusFilter from '../components/StatusFilter';
+import ProjectNameFilter from '../components/ProjectNameFilter';
 import ProjectTable from '../components/ProjectTable';
 import NavigationMenu from '../components/NavigationMenu';
 import { ProjectData } from '@/types/project';
@@ -13,6 +14,7 @@ const AnalysisPage = () => {
   const [loading, setLoading] = useState(true);
   const [projects, setProjects] = useState<ProjectData[]>([]);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
   const [selectedCompanies, setSelectedCompanies] = useState<string[]>([]);
   const { toast } = useToast();
   
@@ -45,15 +47,20 @@ const AnalysisPage = () => {
     loadProjects();
   }, [toast]);
   
-  // Filter projects by status and company if any are selected
+  // Filter projects by status, project name, and company if any are selected
   const filteredProjects = projects.filter(project => {
     const statusMatch = selectedStatuses.length === 0 || selectedStatuses.includes(project.estado);
+    const projectMatch = selectedProjects.length === 0 || selectedProjects.includes(project.nombreProyecto);
     const companyMatch = selectedCompanies.length === 0 || selectedCompanies.includes(project.empresa);
-    return statusMatch && companyMatch;
+    return statusMatch && projectMatch && companyMatch;
   });
 
   const handleStatusFilterChange = (statuses: string[]) => {
     setSelectedStatuses(statuses);
+  };
+  
+  const handleProjectFilterChange = (projectNames: string[]) => {
+    setSelectedProjects(projectNames);
   };
   
   // Get unique companies from all projects
@@ -87,7 +94,10 @@ const AnalysisPage = () => {
       <NavigationMenu />
       
       <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12">
-        <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+        <div className="flex flex-row space-x-4">
+          <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+          <ProjectNameFilter projects={projects} onFilterChange={handleProjectFilterChange} />
+        </div>
         
         <div className="mb-8 animate-fade-in mt-8">
           <div className="max-w-7xl mx-auto">

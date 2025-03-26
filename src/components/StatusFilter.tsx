@@ -30,11 +30,11 @@ const StatusFilter = ({ projects, onFilterChange }: StatusFilterProps) => {
   if (uniqueStatuses.length === 0) return null;
 
   return (
-    <div className="mb-8 animate-fade-in">
+    <div className="mb-8 animate-fade-in w-1/2">
       <div className="max-w-7xl mx-auto">
         <div className="flex flex-col items-center">
           <h2 className="text-lg md:text-xl font-semibold mb-3 text-[#040c67]">FILTRO ESTADO</h2>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2">
             {uniqueStatuses.map(status => {
               const isSelected = selectedStatuses.includes(status);
               return (

@@ -3,6 +3,7 @@ import { useRef, useState, useEffect } from 'react';
 import Header from './Header';
 import CompanySection from './CompanySection';
 import StatusFilter from './StatusFilter';
+import ProjectNameFilter from './ProjectNameFilter';
 import { ProjectData } from '@/types/project';
 import { Button } from '@/components/ui/button';
 import { Grid2X2 } from 'lucide-react';
@@ -25,12 +26,15 @@ const ProjectReport = ({
 }: ProjectReportProps) => {
   const [activeCompany, setActiveCompany] = useState<string | null>(null);
   const [selectedStatuses, setSelectedStatuses] = useState<string[]>([]);
+  const [selectedProjects, setSelectedProjects] = useState<string[]>([]);
   const indexRef = useRef<HTMLDivElement>(null);
 
-  // Filter projects by status if any statuses are selected
-  const filteredProjects = selectedStatuses.length > 0
-    ? projects.filter(project => selectedStatuses.includes(project.estado))
-    : projects;
+  // Filter projects by status and project name if any are selected
+  const filteredProjects = projects.filter(project => {
+    const statusMatch = selectedStatuses.length === 0 || selectedStatuses.includes(project.estado);
+    const projectMatch = selectedProjects.length === 0 || selectedProjects.includes(project.nombreProyecto);
+    return statusMatch && projectMatch;
+  });
 
   // Group projects by company
   const groupedProjects = filteredProjects.reduce((acc: CompanyProjects, project) => {
@@ -82,11 +86,18 @@ const ProjectReport = ({
     setSelectedStatuses(statuses);
   };
 
+  const handleProjectFilterChange = (projectNames: string[]) => {
+    setSelectedProjects(projectNames);
+  };
+
   return <div className="min-h-screen pb-20">
       <Header title={title} subtitle={`Fecha del informe: ${reportDate}`} date={reportDate} />
       
       <div className="max-w-7xl mx-auto px-4 md:px-8 mt-12">
-        <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+        <div className="flex flex-row space-x-4">
+          <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+          <ProjectNameFilter projects={projects} onFilterChange={handleProjectFilterChange} />
+        </div>
         
         <Button onClick={scrollToIndex} className="fixed right-8 bottom-8 z-10 p-3 rounded-full bg-[#040c67] text-primary-foreground shadow-lg hover:bg-[#040c67]/90 transition-all duration-300 group animate-float" aria-label="Scroll to Index" size="icon">
           <Grid2X2 className="transition-transform group-hover:-translate-y-1" />
