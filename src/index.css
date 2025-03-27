@@ -137,23 +137,7 @@
   
   /* Page scroll container - Modificado para que siempre muestre la barra */
   .page-scroll-container {
-    @apply w-full overflow-x-auto;
-    scrollbar-width: thin;
-    scrollbar-color: #9ca3af #f3f4f6;
-    overflow-x: scroll; /* Forzar siempre visible */
-  }
-  
-  .page-scroll-container::-webkit-scrollbar {
-    height: 12px;
-    display: block; /* Forzar siempre visible */
-  }
-  
-  .page-scroll-container::-webkit-scrollbar-track {
-    @apply bg-gray-100 rounded-full;
-  }
-  
-  .page-scroll-container::-webkit-scrollbar-thumb {
-    @apply bg-gray-400 rounded-full hover:bg-gray-500 transition-colors;
+    @apply w-full overflow-x-auto scrollbar-visible;
   }
   
   /* Gantt chart styles */
@@ -181,15 +165,16 @@
     text-wrap: balance;
   }
   
-  /* Nueva clase para hacer que la barra de desplazamiento siempre sea visible */
+  /* Clase para hacer que la barra de desplazamiento siempre sea visible */
   .scrollbar-visible {
-    overflow-x: scroll;
+    overflow-x: scroll !important;
     scrollbar-width: thin;
   }
   
   .scrollbar-visible::-webkit-scrollbar {
-    display: block;
-    height: 8px;
+    display: block !important;
+    height: 12px !important;
+    width: 12px;
   }
   
   .scrollbar-visible::-webkit-scrollbar-track {
@@ -198,5 +183,14 @@
   
   .scrollbar-visible::-webkit-scrollbar-thumb {
     @apply bg-gray-400 rounded-full hover:bg-gray-500 transition-colors;
+  }
+  
+  /* Nuevas clases para la tabla ajustada */
+  .table-fixed {
+    table-layout: fixed !important;
+  }
+  
+  .table-cell-ellipsis {
+    @apply whitespace-nowrap overflow-hidden text-ellipsis;
   }
 }

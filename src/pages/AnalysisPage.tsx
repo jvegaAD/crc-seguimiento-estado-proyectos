@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import StatusFilter from '../components/StatusFilter';
@@ -121,13 +120,14 @@ const AnalysisPage = () => {
       
       <div className="flex-1 overflow-hidden px-4 md:px-8">
         <ResizablePanelGroup direction="vertical" className="h-full">
-          <ResizablePanel defaultSize={25} minSize={15} maxSize={35}>
-            <div className="p-4 space-y-6">
-              <div className="flex flex-row">
-                <div className="w-1/3">
+          {/* Aumentamos el defaultSize del área de filtros para darle más espacio */}
+          <ResizablePanel defaultSize={35} minSize={25} maxSize={45}>
+            <div className="p-4 space-y-6 overflow-y-auto">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="w-full md:w-1/3">
                   <ProjectNameFilter projects={projects} onFilterChange={handleProjectFilterChange} />
                 </div>
-                <div className="w-2/3">
+                <div className="w-full md:w-2/3">
                   <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
                 </div>
               </div>
@@ -156,7 +156,7 @@ const AnalysisPage = () => {
                       </Button>
                     </div>
                     
-                    <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-7 gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
                       {uniqueCompanies.map(company => {
                         const isSelected = selectedCompanies.includes(company);
                         const bgColor = getCompanyColor(company);
@@ -191,7 +191,8 @@ const AnalysisPage = () => {
             </div>
           </ResizablePanel>
           
-          <ResizablePanel defaultSize={75}>
+          {/* Ajustamos el defaultSize de la tabla para que coincida con el espacio restante */}
+          <ResizablePanel defaultSize={65}>
             <div className="p-4">
               <ProjectTable 
                 companyId="all-companies" 

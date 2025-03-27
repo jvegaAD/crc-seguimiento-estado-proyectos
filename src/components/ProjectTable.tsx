@@ -4,7 +4,6 @@ import { useTableData } from '@/hooks/useTableData';
 import TableHeader from './table/TableHeader';
 import StatusBadge from './table/StatusBadge';
 import FilterNotification from './table/FilterNotification';
-import { ScrollArea } from './ui/scroll-area';
 import { Table, TableBody, TableCell, TableHead, TableHeader as ShadcnTableHeader, TableRow } from './ui/table';
 
 interface ProjectTableProps {
@@ -25,18 +24,19 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
     clearAllFilters
   } = useTableData(data);
 
-  const columnHeaders: { key: keyof ProjectData; label: string }[] = [
-    { key: 'empresa', label: 'Empresa' },
-    { key: 'nombreProyecto', label: 'Nombre Proyecto' },
-    { key: 'fechaEntrega', label: 'Fecha Entrega' },
-    { key: 'id', label: 'ID' },
-    { key: 'estado', label: 'Estado' },
-    { key: 'especialidad', label: 'Especialidad' },
-    { key: 'proyectoEstudio', label: 'Proyecto/Estudio' },
-    { key: 'fechaInicio', label: 'Fecha Inicio' },
-    { key: 'fechaTermino', label: 'Fecha Término' },
-    { key: 'tarea', label: 'Tarea' },
-    { key: 'observacion', label: 'Observación' }
+  // Definimos ancho específico para cada columna
+  const columnHeaders: { key: keyof ProjectData; label: string; width: string }[] = [
+    { key: 'empresa', label: 'Empresa', width: '120px' },
+    { key: 'nombreProyecto', label: 'Nombre Proyecto', width: '150px' },
+    { key: 'fechaEntrega', label: 'Fecha Entrega', width: '120px' },
+    { key: 'id', label: 'ID', width: '80px' },
+    { key: 'estado', label: 'Estado', width: '120px' },
+    { key: 'especialidad', label: 'Especialidad', width: '120px' },
+    { key: 'proyectoEstudio', label: 'Proyecto/Estudio', width: '130px' },
+    { key: 'fechaInicio', label: 'Fecha Inicio', width: '120px' },
+    { key: 'fechaTermino', label: 'Fecha Término', width: '120px' },
+    { key: 'tarea', label: 'Tarea', width: '120px' },
+    { key: 'observacion', label: 'Observación', width: '150px' }
   ];
 
   return (
@@ -48,15 +48,15 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
         />
       )}
       
-      {/* Cambiamos la altura para que sea fija y no dependa del viewport */}
-      <div className="scrollbar-visible w-full overflow-x-auto rounded-lg" style={{ maxHeight: '500px' }}>
-        <Table id={tableId} className="w-full table-auto">
+      <div className="scrollbar-visible w-full overflow-x-auto rounded-lg" style={{ maxHeight: '480px' }}>
+        <Table id={tableId} className="w-max border-collapse table-fixed">
           <ShadcnTableHeader className="sticky top-0 bg-[#040c67] text-white z-10">
             <TableRow>
-              {columnHeaders.map(({ key, label }) => (
+              {columnHeaders.map(({ key, label, width }) => (
                 <TableHead 
                   key={key}
-                  className="text-white h-12 font-medium whitespace-nowrap"
+                  className="text-white h-12 font-medium whitespace-nowrap text-left"
+                  style={{ width, minWidth: width }}
                 >
                   <TableHeader
                     columnKey={key}
@@ -85,19 +85,19 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
                   key={`${companyId}-${row.id}-${index}`}
                   className="hover:bg-muted/50"
                 >
-                  <TableCell className="p-2 whitespace-nowrap">{row.empresa}</TableCell>
-                  <TableCell className="p-2 whitespace-nowrap">{row.nombreProyecto}</TableCell>
-                  <TableCell className="p-2 whitespace-nowrap">{row.fechaEntrega}</TableCell>
-                  <TableCell className="p-2 whitespace-nowrap">{row.id}</TableCell>
-                  <TableCell className="p-2 whitespace-nowrap">
-                    <StatusBadge status={row.estado} />
-                  </TableCell>
-                  <TableCell className="p-2 whitespace-nowrap">{row.especialidad}</TableCell>
-                  <TableCell className="p-2 whitespace-nowrap">{row.proyectoEstudio}</TableCell>
-                  <TableCell className="p-2 whitespace-nowrap">{row.fechaInicio}</TableCell>
-                  <TableCell className="p-2 whitespace-nowrap">{row.fechaTermino}</TableCell>
-                  <TableCell className="p-2 whitespace-nowrap">{row.tarea}</TableCell>
-                  <TableCell className="p-2 whitespace-nowrap">{row.observacion}</TableCell>
+                  {columnHeaders.map(({ key, width }) => (
+                    <TableCell 
+                      key={`${companyId}-${row.id}-${index}-${String(key)}`} 
+                      className="p-2 whitespace-nowrap overflow-hidden text-ellipsis"
+                      style={{ width, minWidth: width, maxWidth: width }}
+                    >
+                      {key === 'estado' ? (
+                        <StatusBadge status={String(row[key])} />
+                      ) : (
+                        String(row[key])
+                      )}
+                    </TableCell>
+                  ))}
                 </TableRow>
               ))
             )}
