@@ -24,19 +24,19 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
     clearAllFilters
   } = useTableData(data);
 
-  // Definimos ancho específico para cada columna
+  // Updated column headers with new widths
   const columnHeaders: { key: keyof ProjectData; label: string; width: string }[] = [
-    { key: 'empresa', label: 'Empresa', width: '120px' },
-    { key: 'nombreProyecto', label: 'Nombre Proyecto', width: '150px' },
-    { key: 'fechaEntrega', label: 'Fecha Entrega', width: '120px' },
-    { key: 'id', label: 'ID', width: '80px' },
-    { key: 'estado', label: 'Estado', width: '120px' },
-    { key: 'especialidad', label: 'Especialidad', width: '120px' },
+    { key: 'empresa', label: 'Empresa', width: '100px' },
+    { key: 'nombreProyecto', label: 'Nombre Proyecto', width: '80px' },
+    { key: 'fechaEntrega', label: 'Fecha Entrega', width: '80px' },
+    { key: 'id', label: 'ID', width: '30px' },
+    { key: 'estado', label: 'Estado', width: '80px' },
+    { key: 'especialidad', label: 'Especialidad', width: '100px' },
     { key: 'proyectoEstudio', label: 'Proyecto/Estudio', width: '130px' },
-    { key: 'fechaInicio', label: 'Fecha Inicio', width: '120px' },
-    { key: 'fechaTermino', label: 'Fecha Término', width: '120px' },
+    { key: 'fechaInicio', label: 'Fecha Inicio', width: '80px' },
+    { key: 'fechaTermino', label: 'Fecha Término', width: '80px' },
     { key: 'tarea', label: 'Tarea', width: '120px' },
-    { key: 'observacion', label: 'Observación', width: '150px' }
+    { key: 'observacion', label: 'Observación', width: '300px' }
   ];
 
   return (
