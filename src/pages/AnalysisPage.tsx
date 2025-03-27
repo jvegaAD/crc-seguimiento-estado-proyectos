@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from 'react';
 import Header from '../components/Header';
 import StatusFilter from '../components/StatusFilter';
@@ -27,7 +28,6 @@ const AnalysisPage = () => {
       try {
         setLoading(true);
         const data = await fetchProjects();
-        // Make sure IDs are strings to avoid type issues
         const formattedData = data.map(project => ({
           ...project,
           id: String(project.id)
@@ -86,13 +86,13 @@ const AnalysisPage = () => {
   // Company button colors
   const getCompanyColor = (company: string) => {
     const colors = [
-      '#FFB6C1', // Light Pink
       '#87CEFA', // Light Sky Blue
       '#98FB98', // Pale Green
-      '#FFA07A', // Light Salmon
       '#DDA0DD', // Plum
       '#FFDAB9', // Peach Puff
       '#B0E0E6', // Powder Blue
+      '#FFB6C1', // Light Pink
+      '#FFA07A', // Light Salmon
       '#FFFACD', // Lemon Chiffon
     ];
     const index = company.charCodeAt(0) % colors.length;
@@ -191,7 +191,6 @@ const AnalysisPage = () => {
             </div>
           </ResizablePanel>
           
-          {/* Add a resize handle to separate panels */}
           <ResizableHandle />
           
           {/* Table panel */}
