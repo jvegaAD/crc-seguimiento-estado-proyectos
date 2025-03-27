@@ -9,7 +9,7 @@ import { fetchProjects } from '@/services/projectService';
 import { useToast } from '@/hooks/use-toast';
 import { Database, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 
 const AnalysisPage = () => {
   const [loading, setLoading] = useState(true);
@@ -118,11 +118,11 @@ const AnalysisPage = () => {
       <Header title="Análisis" subtitle={`Fecha del informe: ${reportDate}`} date={reportDate} />
       <NavigationMenu />
       
-      <div className="flex-1 overflow-hidden px-4 md:px-8">
+      <div className="flex-1 overflow-hidden px-4 md:px-8 pb-4">
         <ResizablePanelGroup direction="vertical" className="h-full">
-          {/* Aumentamos el defaultSize del área de filtros para darle más espacio */}
-          <ResizablePanel defaultSize={35} minSize={25} maxSize={45}>
-            <div className="p-4 space-y-6 overflow-y-auto">
+          {/* Filter panel */}
+          <ResizablePanel defaultSize={40} minSize={30} maxSize={50}>
+            <div className="p-4 space-y-6 overflow-y-auto h-full">
               <div className="flex flex-col md:flex-row gap-4">
                 <div className="w-full md:w-1/3">
                   <ProjectNameFilter projects={projects} onFilterChange={handleProjectFilterChange} />
@@ -191,9 +191,12 @@ const AnalysisPage = () => {
             </div>
           </ResizablePanel>
           
-          {/* Ajustamos el defaultSize de la tabla para que coincida con el espacio restante */}
-          <ResizablePanel defaultSize={65}>
-            <div className="p-4">
+          {/* Add a resize handle to separate panels */}
+          <ResizableHandle />
+          
+          {/* Table panel */}
+          <ResizablePanel defaultSize={60}>
+            <div className="p-4 h-full overflow-auto">
               <ProjectTable 
                 companyId="all-companies" 
                 tableId="analysis-table" 
