@@ -70,7 +70,7 @@ const TableHeader = ({
   };
 
   return (
-    <th key={columnKey} className="p-2 border bg-[#040c67] text-primary-foreground">
+    <div className="p-2 border bg-[#040c67] text-primary-foreground">
       <div className="space-y-2">
         <div onClick={() => onSort(columnKey)} className="flex items-center justify-between cursor-pointer hover:opacity-80">
           {label}
@@ -177,7 +177,7 @@ const TableHeader = ({
           </div>
         )}
       </div>
-    </th>
+    </div>
   );
 };
 
