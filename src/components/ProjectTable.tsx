@@ -4,6 +4,8 @@ import { useTableData } from '@/hooks/useTableData';
 import TableHeader from './table/TableHeader';
 import StatusBadge from './table/StatusBadge';
 import FilterNotification from './table/FilterNotification';
+import { ScrollArea } from './ui/scroll-area';
+import { Table, TableBody, TableCell, TableHead, TableHeader as ShadcnTableHeader, TableRow } from './ui/table';
 
 interface ProjectTableProps {
   companyId: string;
@@ -38,7 +40,7 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
   ];
 
   return (
-    <div className="table-wrapper animate-scale-in overflow-x-auto shadow-xl border border-gray-300 rounded-lg">
+    <div className="animate-scale-in shadow-xl border border-gray-300 rounded-lg">
       {hasActiveFilters && (
         <FilterNotification 
           filterCount={Object.keys(filters).length} 
@@ -46,55 +48,63 @@ const ProjectTable = ({ companyId, tableId, data }: ProjectTableProps) => {
         />
       )}
       
-      <table id={tableId} className="w-full border-collapse border border-gray-300">
-        <thead className="bg-[#040c67] text-white">
-          <tr>
-            {columnHeaders.map(({ key, label }) => (
-              <TableHeader
-                key={key}
-                columnKey={key}
-                label={label}
-                sortConfig={sortConfig}
-                onSort={handleSort}
-                filterValue={filters[key]}
-                onFilter={(values) => handleFilter(key, values)}
-                onClearFilter={() => clearFilter(key)}
-                data={data}
-              />
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {filteredAndSortedData.length === 0 ? (
-            <tr>
-              <td colSpan={columnHeaders.length} className="p-4 text-center border border-gray-300">
-                No se encontraron resultados con los filtros aplicados
-              </td>
-            </tr>
-          ) : (
-            filteredAndSortedData.map((row, index) => (
-              <tr 
-                key={`${companyId}-${row.id}-${index}`}
-                className="border-b border-gray-300 hover:bg-muted/50"
-              >
-                <td className="p-2 border border-gray-300">{row.empresa}</td>
-                <td className="p-2 border border-gray-300">{row.nombreProyecto}</td>
-                <td className="p-2 border border-gray-300">{row.fechaEntrega}</td>
-                <td className="p-2 border border-gray-300">{row.id}</td>
-                <td className="p-2 border border-gray-300">
-                  <StatusBadge status={row.estado} />
-                </td>
-                <td className="p-2 border border-gray-300">{row.especialidad}</td>
-                <td className="p-2 border border-gray-300">{row.proyectoEstudio}</td>
-                <td className="p-2 border border-gray-300">{row.fechaInicio}</td>
-                <td className="p-2 border border-gray-300">{row.fechaTermino}</td>
-                <td className="p-2 border border-gray-300">{row.tarea}</td>
-                <td className="p-2 border border-gray-300">{row.observacion}</td>
-              </tr>
-            ))
-          )}
-        </tbody>
-      </table>
+      <ScrollArea className="h-[calc(100vh-350px)] rounded-lg">
+        <div className="min-w-max">
+          <Table id={tableId}>
+            <ShadcnTableHeader className="sticky top-0 bg-[#040c67] text-white z-10">
+              <TableRow>
+                {columnHeaders.map(({ key, label }) => (
+                  <TableHead 
+                    key={key}
+                    className="text-white h-12 font-medium"
+                  >
+                    <TableHeader
+                      columnKey={key}
+                      label={label}
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                      filterValue={filters[key]}
+                      onFilter={(values) => handleFilter(key, values)}
+                      onClearFilter={() => clearFilter(key)}
+                      data={data}
+                    />
+                  </TableHead>
+                ))}
+              </TableRow>
+            </ShadcnTableHeader>
+            <TableBody>
+              {filteredAndSortedData.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={columnHeaders.length} className="p-4 text-center">
+                    No se encontraron resultados con los filtros aplicados
+                  </TableCell>
+                </TableRow>
+              ) : (
+                filteredAndSortedData.map((row, index) => (
+                  <TableRow 
+                    key={`${companyId}-${row.id}-${index}`}
+                    className="hover:bg-muted/50"
+                  >
+                    <TableCell className="p-2">{row.empresa}</TableCell>
+                    <TableCell className="p-2">{row.nombreProyecto}</TableCell>
+                    <TableCell className="p-2">{row.fechaEntrega}</TableCell>
+                    <TableCell className="p-2">{row.id}</TableCell>
+                    <TableCell className="p-2">
+                      <StatusBadge status={row.estado} />
+                    </TableCell>
+                    <TableCell className="p-2">{row.especialidad}</TableCell>
+                    <TableCell className="p-2">{row.proyectoEstudio}</TableCell>
+                    <TableCell className="p-2">{row.fechaInicio}</TableCell>
+                    <TableCell className="p-2">{row.fechaTermino}</TableCell>
+                    <TableCell className="p-2">{row.tarea}</TableCell>
+                    <TableCell className="p-2">{row.observacion}</TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+      </ScrollArea>
     </div>
   );
 };

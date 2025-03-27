@@ -44,11 +44,17 @@
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    height: 100%;
   }
 
   body {
     @apply bg-background text-foreground font-sans;
     font-feature-settings: "ss01", "ss02", "cv01", "cv02";
+    height: 100%;
+  }
+  
+  #root {
+    height: 100%;
   }
 }
 
@@ -74,7 +80,7 @@
   
   .subtle-scroll::-webkit-scrollbar {
     width: 6px;
-    height: 6px;
+    height: 8px;
   }
   
   .subtle-scroll::-webkit-scrollbar-track {
@@ -172,5 +178,16 @@
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  
+  .scrollbar-visible {
+    /* Always show scrollbar */
+    overflow-x: scroll;
+    scrollbar-width: thin;
+  }
+  
+  .scrollbar-visible::-webkit-scrollbar {
+    display: block;
+    height: 8px;
   }
 }
