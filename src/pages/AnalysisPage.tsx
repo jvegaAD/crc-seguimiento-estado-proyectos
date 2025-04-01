@@ -10,7 +10,6 @@ import { fetchProjects } from '@/services/projectService';
 import { useToast } from '@/hooks/use-toast';
 import { Database, Check } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from '@/components/ui/resizable';
 
 const AnalysisPage = () => {
   const [loading, setLoading] = useState(true);
@@ -118,92 +117,84 @@ const AnalysisPage = () => {
       <Header title="Análisis" subtitle={`Fecha del informe: ${reportDate}`} date={reportDate} />
       <NavigationMenu />
       
-      <div className="flex-1 overflow-hidden px-4 md:px-8 pb-4">
-        <ResizablePanelGroup direction="vertical" className="h-full">
-          {/* Filter panel */}
-          <ResizablePanel defaultSize={40} minSize={30} maxSize={50}>
-            <div className="p-4 space-y-6 overflow-y-auto h-full">
-              <div className="flex flex-col md:flex-row gap-4">
-                <div className="w-full md:w-1/3">
-                  <ProjectNameFilter projects={projects} onFilterChange={handleProjectFilterChange} />
+      <div className="flex-1 overflow-auto px-4 md:px-8 pb-4">
+        {/* Filter section */}
+        <div className="mb-6 space-y-6">
+          <div className="flex flex-col md:flex-row gap-4 mt-4">
+            <div className="w-full md:w-1/3">
+              <ProjectNameFilter projects={projects} onFilterChange={handleProjectFilterChange} />
+            </div>
+            <div className="w-full md:w-2/3">
+              <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
+            </div>
+          </div>
+          
+          <div className="animate-fade-in">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col items-center">
+                <h2 className="text-lg md:text-xl font-semibold mb-3 text-[#040c67]">FILTRO EMPRESA</h2>
+                
+                <div className="flex justify-center gap-2 mb-3">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={selectAllCompanies}
+                    className="text-xs hover:bg-[#040c67] hover:text-white"
+                  >
+                    Seleccionar todos
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={deselectAllCompanies}
+                    className="text-xs hover:bg-[#040c67] hover:text-white"
+                  >
+                    Deseleccionar todos
+                  </Button>
                 </div>
-                <div className="w-full md:w-2/3">
-                  <StatusFilter projects={projects} onFilterChange={handleStatusFilterChange} />
-                </div>
-              </div>
-              
-              <div className="animate-fade-in">
-                <div className="max-w-7xl mx-auto">
-                  <div className="flex flex-col items-center">
-                    <h2 className="text-lg md:text-xl font-semibold mb-3 text-[#040c67]">FILTRO EMPRESA</h2>
-                    
-                    <div className="flex justify-center gap-2 mb-3">
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={selectAllCompanies}
-                        className="text-xs hover:bg-[#040c67] hover:text-white"
+                
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
+                  {uniqueCompanies.map(company => {
+                    const isSelected = selectedCompanies.includes(company);
+                    const bgColor = getCompanyColor(company);
+                    return (
+                      <button
+                        key={company}
+                        onClick={() => toggleCompany(company)}
+                        className={`
+                          px-3 py-1.5 rounded-lg transition-all duration-200 text-sm
+                          flex items-center justify-center text-center hover:scale-105
+                          border ${isSelected ? 'border-transparent' : 'border-gray-300'} 
+                          ${isSelected 
+                            ? 'bg-[#040c67] text-primary-foreground shadow-md' 
+                            : 'border-gray-300 shadow-sm hover:shadow-md'}
+                        `}
+                        style={{
+                          backgroundColor: isSelected ? '#040c67' : bgColor,
+                          color: isSelected ? 'white' : '#333'
+                        }}
                       >
-                        Seleccionar todos
-                      </Button>
-                      <Button 
-                        variant="outline" 
-                        size="sm" 
-                        onClick={deselectAllCompanies}
-                        className="text-xs hover:bg-[#040c67] hover:text-white"
-                      >
-                        Deseleccionar todos
-                      </Button>
-                    </div>
-                    
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-2">
-                      {uniqueCompanies.map(company => {
-                        const isSelected = selectedCompanies.includes(company);
-                        const bgColor = getCompanyColor(company);
-                        return (
-                          <button
-                            key={company}
-                            onClick={() => toggleCompany(company)}
-                            className={`
-                              px-3 py-1.5 rounded-lg transition-all duration-200 text-sm
-                              flex items-center justify-center text-center hover:scale-105
-                              border ${isSelected ? 'border-transparent' : 'border-gray-300'} 
-                              ${isSelected 
-                                ? 'bg-[#040c67] text-primary-foreground shadow-md' 
-                                : 'border-gray-300 shadow-sm hover:shadow-md'}
-                            `}
-                            style={{
-                              backgroundColor: isSelected ? '#040c67' : bgColor,
-                              color: isSelected ? 'white' : '#333'
-                            }}
-                          >
-                            <div className="flex items-center gap-1">
-                              {isSelected && <Check className="h-3.5 w-3.5" />}
-                              <span>{company}</span>
-                            </div>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
+                        <div className="flex items-center gap-1">
+                          {isSelected && <Check className="h-3.5 w-3.5" />}
+                          <span>{company}</span>
+                        </div>
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
             </div>
-          </ResizablePanel>
-          
-          <ResizableHandle />
-          
-          {/* Table panel */}
-          <ResizablePanel defaultSize={60}>
-            <div className="p-4 h-full overflow-auto">
-              <ProjectTable 
-                companyId="all-companies" 
-                tableId="analysis-table" 
-                data={filteredProjects} 
-              />
-            </div>
-          </ResizablePanel>
-        </ResizablePanelGroup>
+          </div>
+        </div>
+        
+        {/* Table section */}
+        <div className="mt-4 bg-white rounded-lg shadow p-4 overflow-auto">
+          <ProjectTable 
+            companyId="all-companies" 
+            tableId="analysis-table" 
+            data={filteredProjects} 
+          />
+        </div>
       </div>
     </div>
   );
